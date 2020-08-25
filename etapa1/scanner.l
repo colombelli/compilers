@@ -59,14 +59,19 @@
 
 
     /* LITERALS */
-[@_a-zA-Z][@_0-9a-zA-Z]*    return TK_IDENTIFIER;
-
 "TRUE"      return LIT_TRUE;
 "FALSE"     return LIT_FALSE;
+
+[@_a-zA-Z][@_0-9a-zA-Z]*    return TK_IDENTIFIER;
+
+[0-9A-F]*"."[0-9A-F][0-9A-F]*      return LIT_FLOAT;
+[0-9][0-9A-F]*                     return LIT_INTEGER;
 
 '(\\.|[^'\n\t])'    return LIT_CHAR;
 \"(\\.|[^"\n])*\"   return LIT_STRING;
     /* \"([^"\\\n]|\\.)*\" */
+
+
 
 
     /* Error (outside defined rules)*/
