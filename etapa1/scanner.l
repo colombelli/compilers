@@ -15,6 +15,7 @@
 
 %}
 
+%x COMMENT
 
 %%
 
@@ -44,16 +45,39 @@
 "!="    return OPERATOR_DIF;     
 
 
-    /* Ignore white spaces and tabs */
+    /* IGNORE WHITE SPACES AND TABS */
 [ \t]
 
 
-    /* Increase line count */
-"\n"    return lineNumber++;
+    /* NEW LINE */
+"\n"    lineNumber++;
+
+
+    /* COMMENTS */
+"//".*
+"/*"    BEGIN(COMMENT);
+
+
+    /* LITERALS */
+[@_a-zA-Z][@_0-9a-zA-Z]*    return TK_IDENTIFIER;
+
+"TRUE"      return LIT_TRUE;
+"FALSE"     return LIT_FALSE;
+
+'(\\.|[^'\n\t])'    return LIT_CHAR;
+\"(\\.|[^"\n])*\"   return LIT_STRING;
+    /* \"([^"\\\n]|\\.)*\" */
 
 
     /* Error (outside defined rules)*/
 .       return TOKEN_ERROR;
+
+
+    /* BLOCK COMMENT AUTOMATA */
+<COMMENT>.
+<COMMENT>"\n"   ++lineNumber;
+<COMMENT>"*/" BEGIN(INITIAL);
+
 
 %%
 
