@@ -93,3 +93,7 @@ int yywrap(){
     Running = 0;
     return 1;
 }
+
+void initMe(void){
+    hashInit();
+}
