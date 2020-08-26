@@ -62,13 +62,13 @@
 "TRUE"      return LIT_TRUE;
 "FALSE"     return LIT_FALSE;
 
-[@_a-zA-Z][@_0-9a-zA-Z]*    return TK_IDENTIFIER;
+[@_a-zA-Z][@_0-9a-zA-Z]*    hashInsert(yytext); return TK_IDENTIFIER;
 
-[0-9A-F]*"."[0-9A-F][0-9A-F]*      return LIT_FLOAT;
-[0-9][0-9A-F]*                     return LIT_INTEGER;
+[0-9A-F]*"."[0-9A-F][0-9A-F]*      hashInsert(yytext); return LIT_FLOAT;
+[0-9][0-9A-F]*                     hashInsert(yytext); return LIT_INTEGER;
 
-'(\\.|[^'\n\t])'    return LIT_CHAR;
-\"(\\.|[^"\n])*\"   return LIT_STRING;
+'(\\.|[^'\n\t])'    hashInsert(yytext); return LIT_CHAR;
+\"(\\.|[^"\n])*\"   hashInsert(yytext); return LIT_STRING;
     /* \"([^"\\\n]|\\.)*\" */
 
 
