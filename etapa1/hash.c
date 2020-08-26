@@ -12,16 +12,25 @@ void hashInit(void) {
 
 int hashAddress(char *text){
 
-    int newAddress = 1;
-    for (int i=0; i<strlen(text); i++){
-        newAddress = ((newAddress * text[i]) % HASH_SIZE)+1;
+    int address = 1;
+    for(int i=0; i<strlen(text); i++){
+        address = ((address * text[i]) % HASH_SIZE)+1;
     }
-    return newAddress-1;
+    return address-1;
 }
 
 
 HASH_NODE *hashFind(char *text){
-    return 0; // TODO
+
+    int address = hashAddress(text);
+    HASH_NODE *node;
+
+    for(node=Hashtable[address]; node; node=node->next){
+        if (!strcmp(node->text, text)){
+            return node;
+        }
+    }
+    return NULL; 
 }
 
 
@@ -33,8 +42,8 @@ HASH_NODE *hashInsert(char *text){
     newNode->text = (char*) calloc(strlen(text) + 1, sizeof(char));
     strcpy(newNode->text, text);
     newNode->next = Hashtable[nodeAddress];
-    Hashtable[nodeAddress] = newNode;
 
+    Hashtable[nodeAddress] = newNode;
     return newNode;
 }
 
@@ -46,7 +55,7 @@ void hashPrint(void){
     HASH_NODE *node;
     for(int i=0; i<HASH_SIZE; i++){
         for(node=Hashtable[i]; node; node=node->next){
-            printf("Hashtable %d : %s\n", i, node->text);
+            printf("Address %d: %s\n", i, node->text);
         }
     }
     printf("\n---- End of Hashtable ----\n\n");
