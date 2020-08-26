@@ -15,6 +15,8 @@ int main (int argc, char **argv) {
     exit(2);
   }
   
+  hashPrint();
+
   int tok;
   while (Running) {
     
@@ -53,6 +55,6 @@ int main (int argc, char **argv) {
 
   }
 
-
+  hashPrint();
 
 }

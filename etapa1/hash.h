@@ -6,7 +6,7 @@ typedef struct hash_node {
 
     int type;
     char *text;
-    struct hash_node *next;
+    struct hash_node * next;
 
 } HASH_NODE;
 

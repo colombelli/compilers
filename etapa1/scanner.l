@@ -5,14 +5,17 @@
     int Running = 1;
     int lineNumber = 1;
 
-    int isRunning(void) {
+    int isRunning(void){
         return Running;
     }
 
-    int getLineNumber(void) {
+    int getLineNumber(void){
         return lineNumber;
     }
 
+    void initMe(void){
+        hashInit();
+    }
 %}
 
 %x COMMENT
@@ -58,20 +61,20 @@
 "/*"    BEGIN(COMMENT);
 
 
-    /* LITERALS */
+    /* LITERAL BOOLEANS */
 "TRUE"      return LIT_TRUE;
 "FALSE"     return LIT_FALSE;
 
-[@_a-zA-Z][@_0-9a-zA-Z]*    hashInsert(yytext); return TK_IDENTIFIER;
+    /* IDENTIFIERS */
+[@_a-zA-Z][@_0-9a-zA-Z]*           { hashInsert(yytext); return TK_IDENTIFIER; }
 
-[0-9A-F]*"."[0-9A-F][0-9A-F]*      hashInsert(yytext); return LIT_FLOAT;
-[0-9][0-9A-F]*                     hashInsert(yytext); return LIT_INTEGER;
+    /* LITERAL FLOATS AND INTS */
+[0-9A-F]*"."[0-9A-F][0-9A-F]*      { hashInsert(yytext); return LIT_FLOAT; }
+[0-9][0-9A-F]*                     { hashInsert(yytext); return LIT_INTEGER; }
 
-'(\\.|[^'\n\t])'    hashInsert(yytext); return LIT_CHAR;
-\"(\\.|[^"\n])*\"   hashInsert(yytext); return LIT_STRING;
-    /* \"([^"\\\n]|\\.)*\" */
-
-
+    /* LITERAL CHARS AND STRINGS */
+'(\\.|[^'\n\t])'                   { hashInsert(yytext); return LIT_CHAR; }
+\"(\\.|[^"\n])*\"                  { hashInsert(yytext); return LIT_STRING; }
 
 
     /* Error (outside defined rules)*/
@@ -92,8 +95,4 @@
 int yywrap(){
     Running = 0;
     return 1;
-}
-
-void initMe(void){
-    hashInit();
 }
