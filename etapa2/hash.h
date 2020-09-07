@@ -1,3 +1,6 @@
+#ifndef HASH_HEADER
+#define HASH_HEADER
+
 #include <stdio.h>
 
 #define HASH_SIZE 997
@@ -17,4 +20,5 @@ HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int lexType);
 void hashPrint(void);
 
+#endif
 // END

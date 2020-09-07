@@ -1,6 +1,6 @@
 %{  
-    #include "tokens.h"
-    #include "hash.c"
+    #include "y.tab.h"
+    #include "hash.h"
 
     int Running = 1;
     int lineNumber = 1;
@@ -49,7 +49,7 @@
 
 
     /* IGNORE WHITE SPACES AND TABS */
-[ \t]
+[ \t]   
 
 
     /* NEW LINE */
@@ -89,10 +89,12 @@
 
 %%
 
+#include "y.tab.c"
 #include "main.c"
-
+#include "hash.c"
 
 int yywrap(){
     Running = 0;
     return 1;
 }
+

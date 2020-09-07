@@ -1,4 +1,5 @@
 #include "hash.h"
+#include <stdio.h>
 
 HASH_NODE *Hashtable[HASH_SIZE];
 
@@ -36,9 +37,14 @@ HASH_NODE *hashFind(char *text){
 
 HASH_NODE *hashInsert(char *text, int lexType){
     int nodeAddress = hashAddress(text);
+    HASH_NODE *newNode = hashFind(text);
 
-    HASH_NODE *newNode = (HASH_NODE*) calloc(1, sizeof(HASH_NODE));
-    newNode->type = 1;
+    if(newNode){
+        return newNode;
+    }
+
+    newNode = (HASH_NODE*) calloc(1, sizeof(HASH_NODE));
+    newNode->type = lexType;
     newNode->text = (char*) calloc(strlen(text) + 1, sizeof(char));
     strcpy(newNode->text, text);
     newNode->next = Hashtable[nodeAddress];

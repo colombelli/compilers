@@ -521,8 +521,8 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scanner.l"
 #line 2 "scanner.l"
-    #include "tokens.h"
-    #include "hash.c"
+    #include "y.tab.h"
+    #include "hash.h"
 
     int Running = 1;
     int lineNumber = 1;
@@ -946,29 +946,29 @@ return LIT_FALSE;
 case 24:
 YY_RULE_SETUP
 #line 70 "scanner.l"
-{ hashInsert(yytext); return TK_IDENTIFIER; }
+{ hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 	YY_BREAK
 /* LITERAL FLOATS AND INTS */
 case 25:
 YY_RULE_SETUP
 #line 73 "scanner.l"
-{ hashInsert(yytext); return LIT_FLOAT; }
+{ hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 74 "scanner.l"
-{ hashInsert(yytext); return LIT_INTEGER; }
+{ hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
 	YY_BREAK
 /* LITERAL CHARS AND STRINGS */
 case 27:
 YY_RULE_SETUP
 #line 77 "scanner.l"
-{ hashInsert(yytext); return LIT_CHAR; }
+{ hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 78 "scanner.l"
-{ hashInsert(yytext); return LIT_STRING; }
+{ hashInsert(yytext, LIT_STRING); return LIT_STRING; }
 	YY_BREAK
 /* Error (outside defined rules)*/
 case 29:
@@ -2007,10 +2007,13 @@ void yyfree (void * ptr )
 #line 91 "scanner.l"
 
 
+#include "y.tab.c"
 #include "main.c"
-
+#include "hash.c"
 
 int yywrap(){
     Running = 0;
     return 1;
 }
+
+
