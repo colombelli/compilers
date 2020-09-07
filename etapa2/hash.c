@@ -38,7 +38,7 @@ HASH_NODE *hashInsert(char *text, int lexType){
     int nodeAddress = hashAddress(text);
 
     HASH_NODE *newNode = (HASH_NODE*) calloc(1, sizeof(HASH_NODE));
-    newNode->type = lexType;
+    newNode->type = 1;
     newNode->text = (char*) calloc(strlen(text) + 1, sizeof(char));
     strcpy(newNode->text, text);
     newNode->next = Hashtable[nodeAddress];
