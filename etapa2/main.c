@@ -19,7 +19,7 @@ int main (int argc, char **argv) {
   
   //hashPrint();
   yyparse();
-  fprintf(stdout, "Successful compilation!\n");
-  //hashPrint();
+  hashPrint();
+  fprintf(stdout, "Compilation successful!\n\n");
   exit(0); //0 is CODE for SUCCESS
 }

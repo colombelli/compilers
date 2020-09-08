@@ -24,9 +24,12 @@
 %token LIT_FALSE     
 %token LIT_CHAR      
 %token LIT_STRING    
-
 %token TOKEN_ERROR  
 
+%left '.' '&'
+%left '<' '>' OPERATOR_EQ
+%left '+' '-'
+%left '*' '/'
 
 %%
 
@@ -53,6 +56,9 @@ lcmd: cmd lcmd
     ;
 
 cmd: TK_IDENTIFIER '=' expr
+    | KW_IF expr cmd
+    | KW_IF expr cmd KW_ELSE cmd
+    |
     ;
 
 expr: LIT_INTEGER
@@ -70,6 +76,6 @@ expr: LIT_INTEGER
 #include <stdlib.h>
 
 int yyerror() {
-    fprintf(stderr, "Syntax error. Line: %d \n", getLineNumber());
+    fprintf(stderr, "Syntax error at line %d \n", getLineNumber());
     exit(3);
 }
