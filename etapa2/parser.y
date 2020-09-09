@@ -94,7 +94,7 @@ block: '{' cmd_lst '}'
     ;
 
 cmd_lst: cmd cmd_lst
-    |
+    | cmd
     ;
 
 cmd: TK_IDENTIFIER '=' expr
