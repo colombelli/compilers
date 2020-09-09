@@ -26,12 +26,17 @@
 %token LIT_STRING    
 %token TOKEN_ERROR  
 
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '|'
 %left '^'
-%left '~'
-%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF 
+%left '~' 
 %left '+' '-'
 %left '*' '/'
+
+%{
+int yylex();
+int yyerror();
+%}
 
 %%
 
@@ -89,6 +94,7 @@ block: '{' cmd_lst '}'
     ;
 
 cmd_lst: cmd cmd_lst
+    |
     ;
 
 cmd: TK_IDENTIFIER '=' expr
