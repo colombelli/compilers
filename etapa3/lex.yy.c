@@ -946,29 +946,29 @@ return LIT_FALSE;
 case 24:
 YY_RULE_SETUP
 #line 70 "scanner.l"
-{ hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
+{ yylval.symbol = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 	YY_BREAK
 /* LITERAL FLOATS AND INTS */
 case 25:
 YY_RULE_SETUP
 #line 73 "scanner.l"
-{ hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }
+{ yylval.symbol = hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 74 "scanner.l"
-{ hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
+{ yylval.symbol = hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
 	YY_BREAK
 /* LITERAL CHARS AND STRINGS */
 case 27:
 YY_RULE_SETUP
 #line 77 "scanner.l"
-{ hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
+{ yylval.symbol = hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 78 "scanner.l"
-{ hashInsert(yytext, LIT_STRING); return LIT_STRING; }
+{ yylval.symbol = hashInsert(yytext, LIT_STRING); return LIT_STRING; }
 	YY_BREAK
 /* Error (outside defined rules)*/
 case 29:

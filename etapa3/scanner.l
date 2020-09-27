@@ -66,15 +66,15 @@
 "FALSE"     return LIT_FALSE;
 
     /* IDENTIFIERS */
-[@_a-zA-Z][@_0-9a-zA-Z]*           { hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
+[@_a-zA-Z][@_0-9a-zA-Z]*           { yylval.symbol = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 
     /* LITERAL FLOATS AND INTS */
-[0-9A-F]*"."[0-9A-F][0-9A-F]*      { hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }
-[0-9][0-9A-F]*                     { hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
+[0-9A-F]*"."[0-9A-F][0-9A-F]*      { yylval.symbol = hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }
+[0-9][0-9A-F]*                     { yylval.symbol = hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }
 
     /* LITERAL CHARS AND STRINGS */
-'(\\.|[^'\n\t])'                   { hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
-\"(\\.|[^"\n])*\"                  { hashInsert(yytext, LIT_STRING); return LIT_STRING; }
+'(\\.|[^'\n\t])'                   { yylval.symbol = hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }
+\"(\\.|[^"\n])*\"                  { yylval.symbol = hashInsert(yytext, LIT_STRING); return LIT_STRING; }
 
 
     /* Error (outside defined rules)*/

@@ -1,11 +1,12 @@
 %{
     #include "hash.h"
-    
+
+    int yylex();
+    int yyerror();
 %}
 
 %union
 {
-    int value;
     HASH_NODE *symbol;
 }
 
@@ -27,15 +28,16 @@
 %token OPERATOR_GE   
 %token OPERATOR_EQ   
 %token OPERATOR_DIF  
-%token TK_IDENTIFIER 
+%token<symbol> TK_IDENTIFIER 
 
-%token LIT_INTEGER   
-%token LIT_FLOAT     
-%token LIT_TRUE      
-%token LIT_FALSE     
-%token LIT_CHAR      
+%token<symbol> LIT_INTEGER   
+%token<symbol> LIT_FLOAT     
+%token<symbol> LIT_TRUE      
+%token<symbol> LIT_FALSE     
+%token<symbol> LIT_CHAR      
 %token LIT_STRING    
 %token TOKEN_ERROR  
+
 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '|'
@@ -44,10 +46,6 @@
 %left '+' '-'
 %left '*' '/'
 
-%{
-int yylex();
-int yyerror();
-%}
 
 %%
 
@@ -108,8 +106,8 @@ cmd_lst: cmd cmd_lst
     | cmd
     ;
 
-cmd: TK_IDENTIFIER '=' expr
-    | TK_IDENTIFIER '[' expr ']' '=' expr
+cmd: TK_IDENTIFIER '=' expr                     
+    | TK_IDENTIFIER '[' expr ']' '=' expr       
     | KW_READ TK_IDENTIFIER
     | KW_PRINT printable print_lst
     | KW_RETURN expr
@@ -132,28 +130,28 @@ flow_cmd: KW_IF '(' expr ')' KW_THEN cmd
     | KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
     ;
 
-expr: TK_IDENTIFIER
-    | TK_IDENTIFIER '[' expr ']'
-    | LIT_INTEGER
+expr: TK_IDENTIFIER                 {fprintf(stderr, "Recebi %s\n", $1->text);}
+    | TK_IDENTIFIER '[' expr ']'    {fprintf(stderr, "Recebi %s\n", $1->text);}
+    | LIT_INTEGER                   {fprintf(stderr, "Recebi %s\n", $1->text);}
     | LIT_FLOAT
     | LIT_FALSE
     | LIT_TRUE
     | LIT_CHAR
-    | expr '+' expr
-    | expr '-' expr
-    | expr '*' expr
-    | expr '/' expr
-    | expr OPERATOR_EQ expr
-    | expr OPERATOR_GE expr
-    | expr OPERATOR_LE expr
-    | expr OPERATOR_DIF expr
-    | expr '>' expr
-    | expr '<' expr
-    | expr '^' expr
-    | expr '|' expr
-    | expr '~' expr
-    | '(' expr ')'
-    | foo_call
+    | expr '+' expr                 
+    | expr '-' expr                
+    | expr '*' expr                 
+    | expr '/' expr                 
+    | expr OPERATOR_EQ expr         
+    | expr OPERATOR_GE expr         
+    | expr OPERATOR_LE expr         
+    | expr OPERATOR_DIF expr        
+    | expr '>' expr                 
+    | expr '<' expr                 
+    | expr '^' expr                 
+    | expr '|' expr                 
+    | '~' expr                      
+    | '(' expr ')'                  
+    | foo_call                      
     ;
 
 foo_call: TK_IDENTIFIER '(' ')'
