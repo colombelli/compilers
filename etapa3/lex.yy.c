@@ -521,8 +521,8 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scanner.l"
 #line 2 "scanner.l"
-    #include "y.tab.h"
     #include "hash.h"
+    #include "y.tab.h"
 
     int Running = 1;
     int lineNumber = 1;

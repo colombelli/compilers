@@ -67,10 +67,10 @@
 
 
 /* First part of user prologue.  */
-#line 36 "parser.y"
+#line 1 "parser.y"
 
-int yylex();
-int yyerror();
+    #include "hash.h"
+    
 
 #line 76 "y.tab.c"
 
@@ -174,7 +174,17 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 7 "parser.y"
+
+    int value;
+    HASH_NODE *symbol;
+
+#line 185 "y.tab.c"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -262,6 +272,13 @@ enum yysymbol_kind_t
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
+/* Second part of user prologue.  */
+#line 47 "parser.y"
+
+int yylex();
+int yyerror();
+
+#line 282 "y.tab.c"
 
 
 #ifdef short
@@ -627,14 +644,14 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    43,    43,    46,    47,    50,    51,    54,    55,    58,
-      59,    60,    61,    64,    65,    66,    67,    68,    71,    72,
-      75,    76,    79,    82,    83,    86,    87,    90,    93,    96,
-      97,   100,   101,   102,   103,   104,   105,   106,   107,   110,
-     111,   114,   115,   118,   119,   120,   121,   124,   125,   126,
-     127,   128,   129,   130,   131,   132,   133,   134,   135,   136,
-     137,   138,   139,   140,   141,   142,   143,   144,   145,   148,
-     149,   152,   155,   156
+       0,    54,    54,    57,    58,    61,    62,    65,    66,    69,
+      70,    71,    72,    75,    76,    77,    78,    79,    82,    83,
+      86,    87,    90,    93,    94,    97,    98,   101,   104,   107,
+     108,   111,   112,   113,   114,   115,   116,   117,   118,   121,
+     122,   125,   126,   129,   130,   131,   132,   135,   136,   137,
+     138,   139,   140,   141,   142,   143,   144,   145,   146,   147,
+     148,   149,   150,   151,   152,   153,   154,   155,   156,   159,
+     160,   163,   166,   167
 };
 #endif
 
@@ -1349,7 +1366,7 @@ yyreduce:
   switch (yyn)
     {
 
-#line 1353 "y.tab.c"
+#line 1370 "y.tab.c"
 
       default: break;
     }
@@ -1543,7 +1560,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 159 "parser.y"
+#line 170 "parser.y"
 
 
 #include <stdio.h>
