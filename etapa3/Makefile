@@ -19,7 +19,7 @@ hash.o: hash.c
 ast.o: ast.c
 	gcc -c ast.c
 
-lex.yy.o: lex.yy.c
+lex.yy.o: lex.yy.c y.tab.o
 	gcc -c lex.yy.c
 
 y.tab.o: y.tab.c
@@ -29,7 +29,7 @@ y.tab.o: y.tab.c
 y.tab.c: parser.y
 	yacc -d parser.y
 
-lex.yy.c: scanner.l y.tab.c
+lex.yy.c: scanner.l 
 	lex scanner.l
 
 clean:

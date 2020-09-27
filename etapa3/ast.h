@@ -10,6 +10,17 @@
 #define AST_SUB 3
 #define AST_MUL 4
 #define AST_DIV 5
+#define AST_EQ 6
+#define AST_GE 7
+#define AST_LE 8
+#define AST_DIF 9
+#define AST_GRE 10
+#define AST_LES 11
+#define AST_AND 12
+#define AST_OR 13
+#define AST_NOT 14
+
+#define AST_LCMD 20
 
 
 typedef struct astnode
@@ -20,6 +31,6 @@ typedef struct astnode
 } AST;
 
 AST *astCreate(int type, HASH_NODE *symbol, AST* s0, AST* s1, AST* s2, AST* s3);
-void astPrint(AST *node);
+void astPrint(AST *node, int level);
 
 #endif
