@@ -5,15 +5,15 @@
     int Running = 1;
     int lineNumber = 1;
 
-    int isRunning(void){
+    int isRunning(){
         return Running;
     }
 
-    int getLineNumber(void){
+    int getLineNumber(){
         return lineNumber;
     }
 
-    void initMe(void){
+    void initMe(){
         hashInit();
     }
 %}
@@ -89,9 +89,6 @@
 
 %%
 
-#include "y.tab.c"
-#include "main.c"
-#include "hash.c"
 
 int yywrap(){
     Running = 0;

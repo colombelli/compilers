@@ -527,15 +527,15 @@ char *yytext;
     int Running = 1;
     int lineNumber = 1;
 
-    int isRunning(void){
+    int isRunning(){
         return Running;
     }
 
-    int getLineNumber(void){
+    int getLineNumber(){
         return lineNumber;
     }
 
-    void initMe(void){
+    void initMe(){
         hashInit();
     }
 #line 541 "lex.yy.c"
@@ -2007,9 +2007,6 @@ void yyfree (void * ptr )
 #line 91 "scanner.l"
 
 
-#include "y.tab.c"
-#include "main.c"
-#include "hash.c"
 
 int yywrap(){
     Running = 0;

@@ -1,8 +1,9 @@
 %{
     #include "hash.h"
 
-    int yylex();
     int yyerror();
+    int getLineNumber();
+    int yylex();
 %}
 
 %union

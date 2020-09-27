@@ -71,10 +71,11 @@
 
     #include "hash.h"
 
-    int yylex();
     int yyerror();
+    int getLineNumber();
+    int yylex();
 
-#line 78 "y.tab.c"
+#line 79 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -178,11 +179,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 9 "parser.y"
+#line 10 "parser.y"
 
     HASH_NODE *symbol;
 
-#line 186 "y.tab.c"
+#line 187 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -638,14 +639,14 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    55,    56,    59,    60,    63,    64,    67,
-      68,    69,    70,    73,    74,    75,    76,    77,    80,    81,
-      84,    85,    88,    91,    92,    95,    96,    99,   102,   105,
-     106,   109,   110,   111,   112,   113,   114,   115,   116,   119,
-     120,   123,   124,   127,   128,   129,   130,   133,   134,   135,
-     136,   137,   138,   139,   140,   141,   142,   143,   144,   145,
-     146,   147,   148,   149,   150,   151,   152,   153,   154,   157,
-     158,   161,   164,   165
+       0,    53,    53,    56,    57,    60,    61,    64,    65,    68,
+      69,    70,    71,    74,    75,    76,    77,    78,    81,    82,
+      85,    86,    89,    92,    93,    96,    97,   100,   103,   106,
+     107,   110,   111,   112,   113,   114,   115,   116,   117,   120,
+     121,   124,   125,   128,   129,   130,   131,   134,   135,   136,
+     137,   138,   139,   140,   141,   142,   143,   144,   145,   146,
+     147,   148,   149,   150,   151,   152,   153,   154,   155,   158,
+     159,   162,   165,   166
 };
 #endif
 
@@ -1362,25 +1363,25 @@ yyreduce:
   switch (yyn)
     {
   case 47:
-#line 133 "parser.y"
+#line 134 "parser.y"
                                     {fprintf(stderr, "Recebi %s\n", (yyvsp[0].symbol)->text);}
-#line 1368 "y.tab.c"
+#line 1369 "y.tab.c"
     break;
 
   case 48:
-#line 134 "parser.y"
+#line 135 "parser.y"
                                     {fprintf(stderr, "Recebi %s\n", (yyvsp[-3].symbol)->text);}
-#line 1374 "y.tab.c"
+#line 1375 "y.tab.c"
     break;
 
   case 49:
-#line 135 "parser.y"
+#line 136 "parser.y"
                                     {fprintf(stderr, "Recebi %s\n", (yyvsp[0].symbol)->text);}
-#line 1380 "y.tab.c"
+#line 1381 "y.tab.c"
     break;
 
 
-#line 1384 "y.tab.c"
+#line 1385 "y.tab.c"
 
       default: break;
     }
@@ -1574,7 +1575,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 168 "parser.y"
+#line 169 "parser.y"
 
 
 #include <stdio.h>

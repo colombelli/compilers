@@ -1,6 +1,9 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include "hash.h"
+
+extern FILE *yyin;
+extern void initMe();
+int yyparse();
 
 int main (int argc, char **argv) {
 
