@@ -38,7 +38,7 @@
 %token<symbol> LIT_TRUE      
 %token<symbol> LIT_FALSE     
 %token<symbol> LIT_CHAR      
-%token LIT_STRING    
+%token<symbol> LIT_STRING    
 %token TOKEN_ERROR  
 
 %type<ast> block
@@ -46,6 +46,12 @@
 %type<ast> cmd_lst
 %type<ast> flow_cmd
 %type<ast> expr
+%type<ast> printable
+%type<ast> print_lst
+%type<ast> foo_call
+%type<ast> foo_call_args
+%type<ast> foo_call_args_lst
+
 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '|'
@@ -116,20 +122,20 @@ cmd_lst: cmd cmd_lst    { $$ = astCreate(AST_LCMD,0,$1,$2,0,0); }
 
 cmd: TK_IDENTIFIER '=' expr                     { $$ = astCreate(AST_ATTR,$1,$3,0,0,0); }
     | TK_IDENTIFIER '[' expr ']' '=' expr       { $$ = astCreate(AST_VEC_ATTR,$1,$3,$6,0,0); }
-    | KW_READ TK_IDENTIFIER                     { $$ = 0;             }
-    | KW_PRINT printable print_lst              { $$ = 0;             }
-    | KW_RETURN expr                            { $$ = 0;             }
+    | KW_READ TK_IDENTIFIER                     { $$ = astCreate(AST_READ,$2,0,0,0,0); }
+    | KW_PRINT printable print_lst              { $$ = astCreate(AST_LPRINT,0,$2,$3,0,0); }
+    | KW_RETURN expr                            { $$ = astCreate(AST_RETURN,0,$2,0,0,0); }
     | flow_cmd                                  { $$ = $1; }
     | block                                     { $$ = $1; }
     |                                           { $$ = 0; }
     ;
 
-printable: LIT_STRING
-    | expr
+printable: LIT_STRING   { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | expr              { $$ = $1; }
     ;
 
-print_lst: ',' printable print_lst
-    |
+print_lst: ',' printable print_lst      { $$ = astCreate(AST_LPRINT,0,$2,$3,0,0); }
+    |                                   { $$ = 0; }
     ;
 
 flow_cmd: KW_IF '(' expr ')' KW_THEN cmd                            { $$ = astCreate(AST_IF,0,$3,$6,0,0); }
@@ -159,18 +165,18 @@ expr: TK_IDENTIFIER                 { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
     | expr '|' expr                 { $$ = astCreate(AST_OR,0,$1,$3,0,0); }
     | '~' expr                      { $$ = astCreate(AST_NOT,0,$2,0,0,0); }
     | '(' expr ')'                  { $$ = $2; }
-    | foo_call                      { $$ = 0;                       }
+    | foo_call                      { $$ = $1; }
     ;
 
-foo_call: TK_IDENTIFIER '(' ')'
-    | TK_IDENTIFIER '(' foo_call_args ')'
+foo_call: TK_IDENTIFIER '(' ')'             { $$ = astCreate(AST_FOO_CALL,$1,0,0,0,0); }
+    | TK_IDENTIFIER '(' foo_call_args ')'   { $$ = astCreate(AST_FOO_CALL,$1,$3,0,0,0); }
     ;
 
-foo_call_args: expr foo_call_args_lst
+foo_call_args: expr foo_call_args_lst       { $$ = astCreate(AST_FOO_CALL_ARG,0,$1,$2,0,0); }
     ;
 
-foo_call_args_lst: ',' expr foo_call_args_lst
-    |
+foo_call_args_lst: ',' expr foo_call_args_lst   { $$ = astCreate(AST_FOO_CALL_ARG,0,$2,$3,0,0); }
+    |                                           { $$ = 0; }
     ;
 
 %%

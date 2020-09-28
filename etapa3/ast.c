@@ -50,6 +50,13 @@ void astPrint(AST *node, int level){
         case AST_IF_ELSE: fprintf(stderr, "AST_IF_ELSE"); break;
         case AST_WHILE: fprintf(stderr, "AST_WHILE"); break;
         case AST_LOOP: fprintf(stderr, "AST_LOOP"); break;
+        case AST_LPRINT: fprintf(stderr, "AST_LPRINT"); break;
+        case AST_READ: fprintf(stderr, "AST_READ"); break;
+        case AST_RETURN: fprintf(stderr, "AST_RETURN"); break;
+        case AST_FOO_CALL: fprintf(stderr, "AST_FOO_CALL"); break;
+        case AST_FOO_CALL_ARG: fprintf(stderr, "AST_FOO_CALL_ARG"); break;
+        case AST_FOO_DEF: fprintf(stderr, "AST_FOO_DEF"); break;
+        case AST_FOO_DEF_ARG: fprintf(stderr, "AST_FOO_DEF_ARG"); break;
         default: fprintf(stderr, "AST_UNKNOWN"); break;
     }
 

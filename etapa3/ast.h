@@ -31,6 +31,16 @@
 #define AST_WHILE 21
 #define AST_LOOP 22
 
+#define AST_LPRINT 23
+#define AST_READ 24
+#define AST_RETURN 25
+
+#define AST_FOO_CALL 26
+#define AST_FOO_CALL_ARG 27
+#define AST_FOO_DEF 28
+#define AST_FOO_DEF_ARG 29
+
+
 
 
 typedef struct astnode
