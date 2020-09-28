@@ -37,8 +37,16 @@
 
 #define AST_FOO_CALL 26
 #define AST_FOO_CALL_ARG 27
-#define AST_FOO_DEF 28
-#define AST_FOO_DEF_ARG 29
+#define AST_FOO_DEC 28
+#define AST_FOO_DEC_HEADER 29
+#define AST_FOO_DEC_ARG 30
+
+#define AST_BLOCK 31
+
+#define AST_TBOOL 32
+#define AST_TINT 33
+#define AST_TFLOAT 34
+#define AST_TCHAR 35
 
 
 

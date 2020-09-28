@@ -41,6 +41,7 @@
 %token<symbol> LIT_STRING    
 %token TOKEN_ERROR  
 
+%type<ast> var_type
 %type<ast> block
 %type<ast> cmd
 %type<ast> cmd_lst
@@ -51,7 +52,13 @@
 %type<ast> foo_call
 %type<ast> foo_call_args
 %type<ast> foo_call_args_lst
-
+%type<ast> foo_dec
+%type<ast> foo_header
+%type<ast> foo_header_lst
+%type<ast> foo_arg
+%type<ast> programa
+%type<ast> dec_lst
+%type<ast> dec
 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '|'
@@ -63,7 +70,7 @@
 
 %%
 
-programa: dec_lst           
+programa: dec_lst       
     ;
 
 dec_lst: dec ';' dec_lst
@@ -71,17 +78,17 @@ dec_lst: dec ';' dec_lst
     ;
 
 dec: var_dec
-    | foo_dec
+    | foo_dec   { astPrint($1, 0); }
     ;
 
 var_dec: TK_IDENTIFIER '=' var_type ':' init_lits
     | TK_IDENTIFIER '=' var_type '[' LIT_INTEGER ']' vec_def
     ;
 
-var_type: KW_BOOL
-    | KW_INT
-    | KW_FLOAT
-    | KW_CHAR
+var_type: KW_BOOL   { $$ = astCreate(AST_TBOOL,0,0,0,0,0); }
+    | KW_INT        { $$ = astCreate(AST_TINT,0,0,0,0,0); }
+    | KW_FLOAT      { $$ = astCreate(AST_TFLOAT,0,0,0,0,0); }
+    | KW_CHAR       { $$ = astCreate(AST_TCHAR,0,0,0,0,0); }
     ;
 
 init_lits: LIT_CHAR
@@ -99,21 +106,22 @@ vec_def_lst: init_lits vec_def_lst
     |
     ;
 
-foo_dec: foo_header block       { astPrint($2, 0); }
+foo_dec: foo_header block       { $$ = astCreate(AST_FOO_DEC,0,$1,$2,0,0); }
     ; 
 
-foo_header: TK_IDENTIFIER '(' ')' '=' var_type
-    | TK_IDENTIFIER '(' foo_arg foo_header_lst ')' '=' var_type
+foo_header: TK_IDENTIFIER '(' ')' '=' var_type                      { $$ = astCreate(AST_FOO_DEC_HEADER,$1,$5,0,0,0); }
+    | TK_IDENTIFIER '(' foo_arg foo_header_lst ')' '=' var_type     { $$ = astCreate(AST_FOO_DEC_HEADER,$1,$7,$3,0,0); 
+                                                                      $3->son[1] = $4; }
     ;
 
-foo_header_lst: ',' foo_arg foo_header_lst
-    |
+foo_header_lst: ',' foo_arg foo_header_lst  { $$ = $2; $$->son[1] = $3; }
+    |                                       { $$ = 0; }
     ;
 
-foo_arg: TK_IDENTIFIER '=' var_type
+foo_arg: TK_IDENTIFIER '=' var_type     { $$ = astCreate(AST_FOO_DEC_ARG,$1,$3,0,0,0); }
     ;
 
-block: '{' cmd_lst '}'  { $$ = $2; }
+block: '{' cmd_lst '}'  { $$ = astCreate(AST_BLOCK,0,$2,0,0,0); }
     ;
 
 cmd_lst: cmd cmd_lst    { $$ = astCreate(AST_LCMD,0,$1,$2,0,0); }
