@@ -24,9 +24,11 @@ void astPrint(AST *node, int level){
     int i;
 
     for (i=0; i<level; i++)
-        fprintf(stderr, "  ");
+        //fprintf(stderr, "  ");
+        fprintf(stderr, "--");
 
-    fprintf(stderr, "ast - ");
+
+    //fprintf(stderr, "ast - ");
     switch(node->type){
         case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
         case AST_ADD: fprintf(stderr, "AST_ADD"); break;
@@ -63,6 +65,10 @@ void astPrint(AST *node, int level){
         case AST_TCHAR: fprintf(stderr, "AST_TCHAR"); break;
         case AST_TINT: fprintf(stderr, "AST_TINT"); break;
         case AST_TFLOAT: fprintf(stderr, "AST_TFLOAT"); break;
+        case AST_DEC: fprintf(stderr, "AST_DEC"); break;
+        case AST_VAR_DEC: fprintf(stderr, "AST_VAR_DEC"); break;
+        case AST_VEC_DEC: fprintf(stderr, "AST_VEC_DEC"); break;
+        case AST_VEC_INIT_VAL: fprintf(stderr, "AST_VEC_INIT_VAL"); break;
         default: fprintf(stderr, "AST_UNKNOWN"); break;
     }
 

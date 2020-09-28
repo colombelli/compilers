@@ -64,8 +64,8 @@
 
 
     /* LITERAL BOOLEANS */
-"TRUE"      return LIT_TRUE;
-"FALSE"     return LIT_FALSE;
+"TRUE"      { yylval.symbol = hashInsert(yytext, LIT_TRUE); return LIT_TRUE; }
+"FALSE"     { yylval.symbol = hashInsert(yytext, LIT_FALSE); return LIT_FALSE; }
 
     /* IDENTIFIERS */
 [@_a-zA-Z][@_0-9a-zA-Z]*           { yylval.symbol = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }

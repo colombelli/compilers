@@ -59,6 +59,11 @@
 %type<ast> programa
 %type<ast> dec_lst
 %type<ast> dec
+%type<ast> var_dec
+%type<ast> vec_dec
+%type<ast> vec_dec_lst
+%type<ast> init_lits
+
 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '|'
@@ -70,19 +75,20 @@
 
 %%
 
-programa: dec_lst       
+programa: dec_lst   { $$ = $1; astPrint($$, 0); }
     ;
 
-dec_lst: dec ';' dec_lst
-    |
+dec_lst: dec ';' dec_lst    { $$ = astCreate(AST_DEC,0,$1,0,0,0); $$->son[1] = $3; }
+    |                       { $$ = 0; }
     ;
 
-dec: var_dec
-    | foo_dec   { astPrint($1, 0); }
+dec: var_dec    { $$ = $1; }
+    | foo_dec   { $$ = $1; }
     ;
 
-var_dec: TK_IDENTIFIER '=' var_type ':' init_lits
-    | TK_IDENTIFIER '=' var_type '[' LIT_INTEGER ']' vec_def
+var_dec: TK_IDENTIFIER '=' var_type ':' init_lits               { $$ = astCreate(AST_VAR_DEC,$1,$3,$5,0,0); }
+    | TK_IDENTIFIER '=' var_type '[' LIT_INTEGER ']' vec_dec    { AST* vecSizeLit = astCreate(AST_SYMBOL,$5,0,0,0,0);
+                                                                  $$ = astCreate(AST_VEC_DEC,$1,$3,vecSizeLit,$7,0); }
     ;
 
 var_type: KW_BOOL   { $$ = astCreate(AST_TBOOL,0,0,0,0,0); }
@@ -91,19 +97,19 @@ var_type: KW_BOOL   { $$ = astCreate(AST_TBOOL,0,0,0,0,0); }
     | KW_CHAR       { $$ = astCreate(AST_TCHAR,0,0,0,0,0); }
     ;
 
-init_lits: LIT_CHAR
-    | LIT_FALSE
-    | LIT_TRUE
-    | LIT_FLOAT
-    | LIT_INTEGER
+init_lits: LIT_CHAR     { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_FALSE         { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_TRUE          { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_FLOAT         { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_INTEGER       { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
     ;
 
-vec_def: ':' init_lits vec_def_lst
-    |
+vec_dec: ':' init_lits vec_dec_lst  { $$ = astCreate(AST_VEC_INIT_VAL,0,$2,$3,0,0); }
+    |                               { $$ = 0; }
     ;
 
-vec_def_lst: init_lits vec_def_lst
-    |
+vec_dec_lst: init_lits vec_dec_lst      { $$ = astCreate(AST_VEC_INIT_VAL,0,$1,$2,0,0);  }
+    |                                   { $$ = 0; }
     ;
 
 foo_dec: foo_header block       { $$ = astCreate(AST_FOO_DEC,0,$1,$2,0,0); }

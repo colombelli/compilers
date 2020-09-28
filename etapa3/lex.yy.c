@@ -937,12 +937,12 @@ BEGIN(COMMENT);
 case 22:
 YY_RULE_SETUP
 #line 68 "scanner.l"
-return LIT_TRUE;
+{ yylval.symbol = hashInsert(yytext, LIT_TRUE); return LIT_TRUE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 69 "scanner.l"
-return LIT_FALSE;
+{ yylval.symbol = hashInsert(yytext, LIT_FALSE); return LIT_FALSE; }
 	YY_BREAK
 /* IDENTIFIERS */
 case 24:

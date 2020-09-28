@@ -48,7 +48,10 @@
 #define AST_TFLOAT 34
 #define AST_TCHAR 35
 
-
+#define AST_DEC 36
+#define AST_VAR_DEC 37
+#define AST_VEC_DEC 38
+#define AST_VEC_INIT_VAL 39
 
 
 typedef struct astnode
