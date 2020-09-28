@@ -44,6 +44,7 @@
 %type<ast> block
 %type<ast> cmd
 %type<ast> cmd_lst
+%type<ast> flow_cmd
 %type<ast> expr
 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
@@ -56,7 +57,7 @@
 
 %%
 
-programa: dec_lst
+programa: dec_lst           
     ;
 
 dec_lst: dec ';' dec_lst
@@ -92,7 +93,7 @@ vec_def_lst: init_lits vec_def_lst
     |
     ;
 
-foo_dec: foo_header block
+foo_dec: foo_header block       { astPrint($2, 0); }
     ; 
 
 foo_header: TK_IDENTIFIER '(' ')' '=' var_type
@@ -106,7 +107,7 @@ foo_header_lst: ',' foo_arg foo_header_lst
 foo_arg: TK_IDENTIFIER '=' var_type
     ;
 
-block: '{' cmd_lst '}'  { $$ = $2; astPrint($2, 0); }
+block: '{' cmd_lst '}'  { $$ = $2; }
     ;
 
 cmd_lst: cmd cmd_lst    { $$ = astCreate(AST_LCMD,0,$1,$2,0,0); }
@@ -118,7 +119,7 @@ cmd: TK_IDENTIFIER '=' expr                     { $$ = astCreate(AST_ATTR,$1,$3,
     | KW_READ TK_IDENTIFIER                     { $$ = 0;             }
     | KW_PRINT printable print_lst              { $$ = 0;             }
     | KW_RETURN expr                            { $$ = 0;             }
-    | flow_cmd                                  { $$ = 0;             }
+    | flow_cmd                                  { $$ = $1; }
     | block                                     { $$ = $1; }
     |                                           { $$ = 0; }
     ;
@@ -131,10 +132,10 @@ print_lst: ',' printable print_lst
     |
     ;
 
-flow_cmd: KW_IF '(' expr ')' KW_THEN cmd
-    | KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
-    | KW_WHILE '(' expr ')' cmd
-    | KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
+flow_cmd: KW_IF '(' expr ')' KW_THEN cmd                            { $$ = astCreate(AST_IF,0,$3,$6,0,0); }
+    | KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd                    { $$ = astCreate(AST_IF_ELSE,0,$3,$6,$8,0); }
+    | KW_WHILE '(' expr ')' cmd                                     { $$ = astCreate(AST_WHILE,0,$3,$5,0,0); }
+    | KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd  { $$ = astCreate(AST_LOOP,$3,$5,$7,$9,$11); }
     ;
 
 expr: TK_IDENTIFIER                 { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }    

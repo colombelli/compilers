@@ -24,7 +24,13 @@
 #define AST_ATTR 15
 #define AST_VEC_ATTR 16
 #define AST_VEC_SYMBOL 17
-#define AST_LCMD 20
+#define AST_LCMD 18
+
+#define AST_IF 19
+#define AST_IF_ELSE 20
+#define AST_WHILE 21
+#define AST_LOOP 22
+
 
 
 typedef struct astnode
