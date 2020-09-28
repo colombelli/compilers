@@ -33,6 +33,19 @@ void astPrint(AST *node, int level){
         case AST_SUB: fprintf(stderr, "AST_SUB"); break;
         case AST_MUL: fprintf(stderr, "AST_MUL"); break;
         case AST_DIV: fprintf(stderr, "AST_DIV"); break;
+        case AST_EQ: fprintf(stderr, "AST_EQ"); break;
+        case AST_GE: fprintf(stderr, "AST_GE"); break;
+        case AST_LE: fprintf(stderr, "AST_LE"); break;
+        case AST_DIF: fprintf(stderr, "AST_DIF"); break;
+        case AST_GRE: fprintf(stderr, "AST_GRE"); break;
+        case AST_LES: fprintf(stderr, "AST_LES"); break;
+        case AST_AND: fprintf(stderr, "AST_AND"); break;
+        case AST_OR: fprintf(stderr, "AST_OR"); break;
+        case AST_NOT: fprintf(stderr, "AST_NOT"); break;
+        case AST_VEC_SYMBOL: fprintf(stderr, "AST_VEC_SYMBOL"); break;
+        case AST_ATTR: fprintf(stderr, "AST_ATTR"); break;
+        case AST_VEC_ATTR: fprintf(stderr, "AST_VEC_ATTR"); break;
+        case AST_LCMD: fprintf(stderr, "AST_LCMD"); break;
         default: fprintf(stderr, "AST_UNKNOWN"); break;
     }
 

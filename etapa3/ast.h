@@ -3,9 +3,10 @@
 #ifndef AST_HEADER
 #define AST_HEADER
 
-#define MAX_SONS 4  // Hardcoded. this limits funtions to have only 4 parameters
+#define MAX_SONS 4
 
 #define AST_SYMBOL 1
+
 #define AST_ADD 2
 #define AST_SUB 3
 #define AST_MUL 4
@@ -20,6 +21,9 @@
 #define AST_OR 13
 #define AST_NOT 14
 
+#define AST_ATTR 15
+#define AST_VEC_ATTR 16
+#define AST_VEC_SYMBOL 17
 #define AST_LCMD 20
 
 

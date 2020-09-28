@@ -41,9 +41,9 @@
 %token LIT_STRING    
 %token TOKEN_ERROR  
 
+%type<ast> block
 %type<ast> cmd
 %type<ast> cmd_lst
-
 %type<ast> expr
 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
@@ -106,20 +106,20 @@ foo_header_lst: ',' foo_arg foo_header_lst
 foo_arg: TK_IDENTIFIER '=' var_type
     ;
 
-block: '{' cmd_lst '}'
+block: '{' cmd_lst '}'  { $$ = $2; astPrint($2, 0); }
     ;
 
 cmd_lst: cmd cmd_lst    { $$ = astCreate(AST_LCMD,0,$1,$2,0,0); }
     | cmd               { $$ = astCreate(AST_LCMD,0,$1,0,0,0); }
     ;
 
-cmd: TK_IDENTIFIER '=' expr                    { astPrint($3, 0); } 
-    | TK_IDENTIFIER '[' expr ']' '=' expr       
-    | KW_READ TK_IDENTIFIER
-    | KW_PRINT printable print_lst
-    | KW_RETURN expr
-    | flow_cmd
-    | block
+cmd: TK_IDENTIFIER '=' expr                     { $$ = astCreate(AST_ATTR,$1,$3,0,0,0); }
+    | TK_IDENTIFIER '[' expr ']' '=' expr       { $$ = astCreate(AST_VEC_ATTR,$1,$3,$6,0,0); }
+    | KW_READ TK_IDENTIFIER                     { $$ = 0;             }
+    | KW_PRINT printable print_lst              { $$ = 0;             }
+    | KW_RETURN expr                            { $$ = 0;             }
+    | flow_cmd                                  { $$ = 0;             }
+    | block                                     { $$ = $1; }
     |                                           { $$ = 0; }
     ;
 
@@ -138,7 +138,7 @@ flow_cmd: KW_IF '(' expr ')' KW_THEN cmd
     ;
 
 expr: TK_IDENTIFIER                 { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }    
-    | TK_IDENTIFIER '[' expr ']'    
+    | TK_IDENTIFIER '[' expr ']'    { $$ = astCreate(AST_VEC_SYMBOL,$1,$3,0,0,0); }
     | LIT_INTEGER                   { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
     | LIT_FLOAT                     { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
     | LIT_FALSE                     { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
@@ -158,7 +158,7 @@ expr: TK_IDENTIFIER                 { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
     | expr '|' expr                 { $$ = astCreate(AST_OR,0,$1,$3,0,0); }
     | '~' expr                      { $$ = astCreate(AST_NOT,0,$2,0,0,0); }
     | '(' expr ')'                  { $$ = $2; }
-    | foo_call                      
+    | foo_call                      { $$ = 0;                       }
     ;
 
 foo_call: TK_IDENTIFIER '(' ')'
