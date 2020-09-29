@@ -34,9 +34,10 @@ int main (int argc, char **argv) {
   
   yyparse();
   //hashPrint();
-  fprintf(stdout, "Compilation successful!\n\n");
-  astPrint(finalAST, 0);
-  fprintf(stdout, "Decompiling...\n\n");
+  fprintf(stdout, "Compilation successful!\n");
+  //astPrint(finalAST, 0);
+  fprintf(stdout, "Decompiling...\n");
   decompile(decompilationOutputFile, finalAST);
+  fprintf(stdout, "Decompilation successful!\n\n");
   exit(0); //0 is CODE for SUCCESS
 }
