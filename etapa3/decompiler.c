@@ -1,33 +1,67 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include "ast.h"
+#include "decompiler.h"
 
-AST *astCreate(int type, HASH_NODE *symbol, AST* s0, AST* s1, AST* s2, AST* s3){
 
-    AST* newNode;
-    newNode = (AST*) calloc(1, sizeof(AST));
-    newNode->type = type;
-    newNode->symbol = symbol;
-    newNode->son[0] = s0;
-    newNode->son[1] = s1;
-    newNode->son[2] = s2;
-    newNode->son[3] = s3;
+FILE* decompilationFile;
 
-    return newNode;
+
+void decompileVarDec(AST* node){
+    fprintf(decompilationFile, node->symbol->text);
+    fprintf(decompilationFile, " = ");
+    
+    char varType[6];
+    switch (node->son[0]->type) {
+        case AST_TBOOL: strcpy(varType, "bool"); break;
+        case AST_TINT: strcpy(varType, "int"); break;
+        case AST_TFLOAT: strcpy(varType, "float"); break;
+        case AST_TCHAR: strcpy(varType, "char"); break;
+        default: fprintf(stderr, "\nDecompilation Error! Unknown variable type: %d", node->son[0]->type); break;
+    }
+    fprintf(decompilationFile, varType);
+    fprintf(decompilationFile, " : ");
+    fprintf(decompilationFile, node->son[1]->symbol->text);
+    fprintf(decompilationFile, ";");
+    return;
 }
 
 
-void astPrint(AST *node, int level){
-    if (node == 0)
-        return;
-    
-    int i;
-
-    for (i=0; i<level; i++)
-        fprintf(stderr, "--");
-
+void switchDecompilation(AST* node){
 
     switch(node->type){
+        case AST_DEC: fprintf(decompilationFile, "\n"); decompileDec(node); break;
+
+        case AST_VAR_DEC: decompileVarDec(node); break;
+        default: fprintf(stderr, "Error! Unknown node type!\n"); break;
+    }
+    return;
+}
+
+
+void decompileDec(AST* node){
+    if (node == NULL)
+        return;
+    
+    for (int iSon=0; iSon<4; iSon++){
+        if (node->son[iSon])
+            switchDecompilation(node->son[iSon]);
+    }
+    return;
+}
+
+
+void decompile(FILE* outFile, AST* node){
+    if (node == NULL)
+        return;
+    
+    decompilationFile = outFile;
+    decompileDec(node);
+    
+
+
+/*
+    switch(finalAST->type){
         case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
         case AST_ADD: fprintf(stderr, "AST_ADD"); break;
         case AST_SUB: fprintf(stderr, "AST_SUB"); break;
@@ -59,26 +93,15 @@ void astPrint(AST *node, int level){
         case AST_FOO_DEC_HEADER: fprintf(stderr, "AST_FOO_DEC_HEADER"); break;
         case AST_FOO_DEC_ARG: fprintf(stderr, "AST_FOO_DEC_ARG"); break;
         case AST_BLOCK: fprintf(stderr, "AST_BLOCK"); break;
-        case AST_TBOOL: fprintf(stderr, "AST_TBOOL"); break;
-        case AST_TCHAR: fprintf(stderr, "AST_TCHAR"); break;
-        case AST_TINT: fprintf(stderr, "AST_TINT"); break;
-        case AST_TFLOAT: fprintf(stderr, "AST_TFLOAT"); break;
-        case AST_DEC: fprintf(stderr, "AST_DEC"); break;
         case AST_VAR_DEC: fprintf(stderr, "AST_VAR_DEC"); break;
         case AST_VEC_DEC: fprintf(stderr, "AST_VEC_DEC"); break;
         case AST_VEC_INIT_VAL: fprintf(stderr, "AST_VEC_INIT_VAL"); break;
         default: fprintf(stderr, "AST_UNKNOWN"); break;
     }
 
-    if (node->symbol != 0)
-        fprintf(stderr, ",%s\n", node->symbol->text);
+    if (finalAST->symbol != 0)
+        fprintf(stderr, ",%s\n", finalAST->symbol->text);
     else
         fprintf(stderr, ",0\n");
-
-    for (i=0; i<MAX_SONS; ++i){
-        astPrint(node->son[i], level+1);
-    }
-
+*/
 }
-
-

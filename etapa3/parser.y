@@ -5,6 +5,8 @@
     int yyerror();
     int getLineNumber();
     int yylex();
+
+    AST *finalAST;
 %}
 
 %union
@@ -75,7 +77,7 @@
 
 %%
 
-programa: dec_lst   { $$ = $1; astPrint($$, 0); }
+programa: dec_lst   { $$ = $1;  finalAST = $$; }
     ;
 
 dec_lst: dec ';' dec_lst    { $$ = astCreate(AST_DEC,0,$1,0,0,0); $$->son[1] = $3; }
