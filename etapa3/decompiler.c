@@ -154,29 +154,39 @@ void decompileExpr(AST* node){
 
     if (node->type == AST_SYMBOL)
         fprintf(decompilationFile, node->symbol->text);
-        
-
+    
     else {
-        fprintf(decompilationFile,"(");
-        switch(node->type){
-            case AST_ADD: decompileExprBinaryOp(node, "+"); break;
-            case AST_SUB: decompileExprBinaryOp(node, "-"); break;
-            case AST_MUL: decompileExprBinaryOp(node, "*"); break;
-            case AST_DIV: decompileExprBinaryOp(node, "/"); break;
-
-            case AST_EQ: decompileExprBinaryOp(node, "=="); break;
-            case AST_GE: decompileExprBinaryOp(node, ">="); break;
-            case AST_LE: decompileExprBinaryOp(node, "<="); break;
-            case AST_DIF: decompileExprBinaryOp(node, "!="); break;
-            case AST_GRE: decompileExprBinaryOp(node, ">"); break;
-            case AST_LES: decompileExprBinaryOp(node, "<"); break;
-            case AST_AND: decompileExprBinaryOp(node, "^"); break;
-            case AST_OR: decompileExprBinaryOp(node, "|"); break;
-
-            case AST_NOT: decompileExprUnaryOp(node, "~"); break;
-            default: fprintf(stderr, "Error! Unknown expression operator!\n"); exit(1); break;
+        if (node->type == AST_VEC_SYMBOL){
+            fprintf(decompilationFile, node->symbol->text);
+            fprintf(decompilationFile,"[");
+            decompileExpr(node->son[0]);
+            fprintf(decompilationFile,"]");
         }
-        fprintf(decompilationFile,")");
+        
+        else {
+            fprintf(decompilationFile,"(");
+            switch(node->type){
+                case AST_FOO_CALL: decompileFooCall(node); break;
+                
+                case AST_ADD: decompileExprBinaryOp(node, "+"); break;
+                case AST_SUB: decompileExprBinaryOp(node, "-"); break;
+                case AST_MUL: decompileExprBinaryOp(node, "*"); break;
+                case AST_DIV: decompileExprBinaryOp(node, "/"); break;
+
+                case AST_EQ: decompileExprBinaryOp(node, "=="); break;
+                case AST_GE: decompileExprBinaryOp(node, ">="); break;
+                case AST_LE: decompileExprBinaryOp(node, "<="); break;
+                case AST_DIF: decompileExprBinaryOp(node, "!="); break;
+                case AST_GRE: decompileExprBinaryOp(node, ">"); break;
+                case AST_LES: decompileExprBinaryOp(node, "<"); break;
+                case AST_AND: decompileExprBinaryOp(node, "^"); break;
+                case AST_OR: decompileExprBinaryOp(node, "|"); break;
+
+                case AST_NOT: decompileExprUnaryOp(node, "~"); break;
+                default: fprintf(stderr, "Error! Unknown expression operator: %d\n", node->type); exit(1); break;
+            }
+            fprintf(decompilationFile,")");
+        }
     }
     return;
 }
@@ -285,7 +295,7 @@ void switchDecompilation(AST* node){
         case AST_SYMBOL: fprintf(decompilationFile, node->symbol->text); break;
         case AST_VEC_SYMBOL:    fprintf(decompilationFile, node->symbol->text); 
                                 fprintf(decompilationFile, "[");
-                                fprintf(decompilationFile, node->son[0]->symbol->text); 
+                                decompileExpr(node->son[0]);
                                 fprintf(decompilationFile, "]");  
                                 break;
 
