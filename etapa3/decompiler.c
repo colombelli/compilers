@@ -13,7 +13,7 @@ void getStringType(int codeType, char* typeString){
         case AST_TINT: strcpy(typeString, "int"); break;
         case AST_TFLOAT: strcpy(typeString, "float"); break;
         case AST_TCHAR: strcpy(typeString, "char"); break;
-        default: fprintf(stderr, "\nDecompilation Error! Unknown type: %d", codeType); break;
+        default: fprintf(stderr, "\nDecompilation Error! Unknown type: %d", codeType); exit(1); break;
     }
     return;
 }
@@ -87,7 +87,7 @@ void decompileFooDecArg(AST* node, int first){
 void decompileBlock(AST* node){
     fprintf(decompilationFile,"{");
     switchDecompilation(node->son[0]);
-    fprintf(decompilationFile,"}");
+    fprintf(decompilationFile,"\n}");
 }
 
 
@@ -174,7 +174,7 @@ void decompileExpr(AST* node){
             case AST_OR: decompileExprBinaryOp(node, "|"); break;
 
             case AST_NOT: decompileExprUnaryOp(node, "~"); break;
-            default: fprintf(stderr, "Error! Unknown expression operator!\n"); break;
+            default: fprintf(stderr, "Error! Unknown expression operator!\n"); exit(1); break;
         }
         fprintf(decompilationFile,")");
     }
@@ -225,7 +225,17 @@ void decompileLoop(AST* node){
 }
 
 
-void decompilePrint(AST* node){
+void decompilePrint(AST* node, int first){
+    if (node == NULL)
+        return;
+    
+    if (first)
+        fprintf(decompilationFile, "print ");
+    else
+        fprintf(decompilationFile, ", ");
+    
+    switchDecompilation(node->son[0]);
+    decompilePrint(node->son[1], 0);
     return;
 }
 
@@ -244,12 +254,40 @@ void decompileReturn(AST* node){
 }
 
 
+void decompileFooCallArg(AST* node, int first){
+    if (node == NULL)
+        return;
+    if (!first)
+        fprintf(decompilationFile, ", ");
+    
+    decompileExpr(node->son[0]);
+    decompileFooCallArg(node->son[1], 0);
+    return;
+}
+
+
+void decompileFooCall(AST* node){
+    fprintf(decompilationFile,node->symbol->text);
+    fprintf(decompilationFile,"(");
+    decompileFooCallArg(node->son[0], 1);
+    fprintf(decompilationFile,")");
+    return;
+}
+
+
 void switchDecompilation(AST* node){
     if (node == NULL)
         return;
 
     switch(node->type){
         case AST_DEC: fprintf(decompilationFile, "\n"); decompileDec(node); break;
+
+        case AST_SYMBOL: fprintf(decompilationFile, node->symbol->text); break;
+        case AST_VEC_SYMBOL:    fprintf(decompilationFile, node->symbol->text); 
+                                fprintf(decompilationFile, "[");
+                                fprintf(decompilationFile, node->son[0]->symbol->text); 
+                                fprintf(decompilationFile, "]");  
+                                break;
 
         case AST_VAR_DEC: decompileVarDec(node); break;
         case AST_VEC_DEC: decompileVecDec(node); break;
@@ -260,17 +298,17 @@ void switchDecompilation(AST* node){
                         switchDecompilation(node->son[1]); 
                         break;
         case AST_ATTR: decompileAttr(node); break;
-        case AST_SYMBOL: fprintf(decompilationFile, node->symbol->text); break;
         case AST_ADD ... AST_NOT: decompileExpr(node); break;
         case AST_VEC_ATTR: decompileVecAttr(node); break;
         case AST_IF: decompileIf(node); break;
         case AST_IF_ELSE: decompileIfElse(node); break;
         case AST_WHILE: decompileWhile(node); break;
         case AST_LOOP: decompileLoop(node); break;
-        case AST_LPRINT: decompilePrint(node); break;
+        case AST_LPRINT: decompilePrint(node, 1); break;
         case AST_READ: decompileRead(node); break;
         case AST_RETURN: decompileReturn(node); break;
-        default: fprintf(stderr, "Error! Unknown node type!\n"); break;
+        case AST_FOO_CALL: decompileFooCall(node); break;
+        default: fprintf(stderr, "Error! Unknown node type!\n"); exit(1); break;
     }
     return;
 }
@@ -298,9 +336,6 @@ void decompile(FILE* outFile, AST* node){
 
 
 /*
-        case AST_LPRINT: fprintf(stderr, "AST_LPRINT"); break;
-        case AST_READ: fprintf(stderr, "AST_READ"); break;
-        case AST_RETURN: fprintf(stderr, "AST_RETURN"); break;
         case AST_FOO_CALL: fprintf(stderr, "AST_FOO_CALL"); break;
         case AST_FOO_CALL_ARG: fprintf(stderr, "AST_FOO_CALL_ARG"); break;
 */
