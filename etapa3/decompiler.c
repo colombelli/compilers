@@ -87,7 +87,7 @@ void decompileFooDecArg(AST* node, int first){
 void decompileBlock(AST* node){
     fprintf(decompilationFile,"{");
     switchDecompilation(node->son[0]);
-    fprintf(decompilationFile,"};\n");
+    fprintf(decompilationFile,"}");
 }
 
 
@@ -108,6 +108,7 @@ void decompileFooDecHeader(AST* node){
 void decompileFooDec(AST* node){
     decompileFooDecHeader(node->son[0]);
     decompileBlock(node->son[1]);
+    fprintf(decompilationFile, ";\n");
     return;
 }
 
@@ -131,6 +132,17 @@ void decompileExprBinaryOp(AST* node, char* operation){
 void decompileExprUnaryOp(AST* node, char* operation){
     fprintf(decompilationFile, operation);
     decompileExpr(node->son[0]);
+    return;
+}
+
+
+void decompileVecAttr(AST* node){
+    fprintf(decompilationFile, node->symbol->text);
+    fprintf(decompilationFile, "[");
+    switchDecompilation(node->son[0]);
+    fprintf(decompilationFile, "]");
+    fprintf(decompilationFile, "=");
+    switchDecompilation(node->son[1]);
     return;
 }
 
@@ -170,6 +182,68 @@ void decompileExpr(AST* node){
 }
 
 
+void decompileIf(AST* node){
+    fprintf(decompilationFile,"if(");
+    decompileExpr(node->son[0]);
+    fprintf(decompilationFile,") then\n");
+    switchDecompilation(node->son[1]);
+    return;
+}
+
+void decompileIfElse(AST* node){
+    fprintf(decompilationFile,"if(");
+    decompileExpr(node->son[0]);
+    fprintf(decompilationFile,") then\n");
+    switchDecompilation(node->son[1]);
+    fprintf(decompilationFile,"else\n");
+    switchDecompilation(node->son[2]);
+    return;
+}
+
+
+void decompileWhile(AST* node){
+    fprintf(decompilationFile,"while(");
+    decompileExpr(node->son[0]);
+    fprintf(decompilationFile,")\n");
+    switchDecompilation(node->son[1]);
+    return;
+}
+
+
+void decompileLoop(AST* node){
+    fprintf(decompilationFile,"loop(");
+    fprintf(decompilationFile,node->symbol->text);
+    fprintf(decompilationFile,":");
+    decompileExpr(node->son[0]);
+    fprintf(decompilationFile,",");
+    decompileExpr(node->son[1]);
+    fprintf(decompilationFile,",");
+    decompileExpr(node->son[2]);
+    fprintf(decompilationFile,")\n");
+    switchDecompilation(node->son[3]);
+    return;
+}
+
+
+void decompilePrint(AST* node){
+    return;
+}
+
+
+void decompileRead(AST* node){
+    fprintf(decompilationFile,"read ");
+    fprintf(decompilationFile, node->symbol->text);
+    return;
+}
+
+
+void decompileReturn(AST* node){
+    fprintf(decompilationFile,"return ");
+    decompileExpr(node->son[0]);
+    return;
+}
+
+
 void switchDecompilation(AST* node){
     if (node == NULL)
         return;
@@ -181,10 +255,21 @@ void switchDecompilation(AST* node){
         case AST_VEC_DEC: decompileVecDec(node); break;
         case AST_FOO_DEC: decompileFooDec(node); break;
         case AST_BLOCK: decompileBlock(node); break;
-        case AST_LCMD: fprintf(decompilationFile, "\n"); switchDecompilation(node->son[0]); break;
+        case AST_LCMD:  fprintf(decompilationFile, "\n"); 
+                        switchDecompilation(node->son[0]); 
+                        switchDecompilation(node->son[1]); 
+                        break;
         case AST_ATTR: decompileAttr(node); break;
-        case AST_SYMBOL: fprintf(decompilationFile, node->symbol->text);
+        case AST_SYMBOL: fprintf(decompilationFile, node->symbol->text); break;
         case AST_ADD ... AST_NOT: decompileExpr(node); break;
+        case AST_VEC_ATTR: decompileVecAttr(node); break;
+        case AST_IF: decompileIf(node); break;
+        case AST_IF_ELSE: decompileIfElse(node); break;
+        case AST_WHILE: decompileWhile(node); break;
+        case AST_LOOP: decompileLoop(node); break;
+        case AST_LPRINT: decompilePrint(node); break;
+        case AST_READ: decompileRead(node); break;
+        case AST_RETURN: decompileReturn(node); break;
         default: fprintf(stderr, "Error! Unknown node type!\n"); break;
     }
     return;
@@ -213,31 +298,9 @@ void decompile(FILE* outFile, AST* node){
 
 
 /*
-
-        case AST_ADD: fprintf(stderr, "AST_ADD"); break;
-        case AST_SUB: fprintf(stderr, "AST_SUB"); break;
-        case AST_MUL: fprintf(stderr, "AST_MUL"); break;
-        case AST_DIV: fprintf(stderr, "AST_DIV"); break;
-        case AST_EQ: fprintf(stderr, "AST_EQ"); break;
-        case AST_GE: fprintf(stderr, "AST_GE"); break;
-        case AST_LE: fprintf(stderr, "AST_LE"); break;
-        case AST_DIF: fprintf(stderr, "AST_DIF"); break;
-        case AST_GRE: fprintf(stderr, "AST_GRE"); break;
-        case AST_LES: fprintf(stderr, "AST_LES"); break;
-        case AST_AND: fprintf(stderr, "AST_AND"); break;
-        case AST_OR: fprintf(stderr, "AST_OR"); break;
-        case AST_NOT: fprintf(stderr, "AST_NOT"); break;
-        case AST_VEC_SYMBOL: fprintf(stderr, "AST_VEC_SYMBOL"); break;
-        case AST_VEC_ATTR: fprintf(stderr, "AST_VEC_ATTR"); break;
-        case AST_IF: fprintf(stderr, "AST_IF"); break;
-        case AST_IF_ELSE: fprintf(stderr, "AST_IF_ELSE"); break;
-        case AST_WHILE: fprintf(stderr, "AST_WHILE"); break;
-        case AST_LOOP: fprintf(stderr, "AST_LOOP"); break;
         case AST_LPRINT: fprintf(stderr, "AST_LPRINT"); break;
         case AST_READ: fprintf(stderr, "AST_READ"); break;
         case AST_RETURN: fprintf(stderr, "AST_RETURN"); break;
         case AST_FOO_CALL: fprintf(stderr, "AST_FOO_CALL"); break;
         case AST_FOO_CALL_ARG: fprintf(stderr, "AST_FOO_CALL_ARG"); break;
-
-
 */
