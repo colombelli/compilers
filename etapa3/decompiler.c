@@ -7,21 +7,59 @@
 FILE* decompilationFile;
 
 
+void getStringType(int codeType, char* typeString){
+    switch (codeType) {
+        case AST_TBOOL: strcpy(typeString, "bool"); break;
+        case AST_TINT: strcpy(typeString, "int"); break;
+        case AST_TFLOAT: strcpy(typeString, "float"); break;
+        case AST_TCHAR: strcpy(typeString, "char"); break;
+        default: fprintf(stderr, "\nDecompilation Error! Unknown type: %d", codeType); break;
+    }
+    return;
+}
+
+
 void decompileVarDec(AST* node){
     fprintf(decompilationFile, node->symbol->text);
     fprintf(decompilationFile, " = ");
     
-    char varType[6];
-    switch (node->son[0]->type) {
-        case AST_TBOOL: strcpy(varType, "bool"); break;
-        case AST_TINT: strcpy(varType, "int"); break;
-        case AST_TFLOAT: strcpy(varType, "float"); break;
-        case AST_TCHAR: strcpy(varType, "char"); break;
-        default: fprintf(stderr, "\nDecompilation Error! Unknown variable type: %d", node->son[0]->type); break;
-    }
+    char varType[6]; 
+    getStringType(node->son[0]->type, varType);
     fprintf(decompilationFile, varType);
+
     fprintf(decompilationFile, " : ");
     fprintf(decompilationFile, node->son[1]->symbol->text);
+    fprintf(decompilationFile, ";");
+    return;
+}
+
+void decompileVecInitVal(AST* node){
+    if (node==NULL)
+        return;
+
+    fprintf(decompilationFile, " %s", node->son[0]->symbol->text);
+    decompileVecInitVal(node->son[1]);
+    return;
+}
+
+
+void decompileVecDec(AST* node){
+    fprintf(decompilationFile, node->symbol->text);
+    fprintf(decompilationFile, " = ");
+
+    char vecType[6]; 
+    getStringType(node->son[0]->type, vecType);
+    fprintf(decompilationFile, vecType);
+
+    fprintf(decompilationFile, "[");
+    fprintf(decompilationFile, node->son[1]->symbol->text);
+    fprintf(decompilationFile, "]");
+
+    if (node->son[2]){ // Then it is being initialized
+        fprintf(decompilationFile, ":");
+        decompileVecInitVal(node->son[2]);
+    }
+    
     fprintf(decompilationFile, ";");
     return;
 }
@@ -33,6 +71,7 @@ void switchDecompilation(AST* node){
         case AST_DEC: fprintf(decompilationFile, "\n"); decompileDec(node); break;
 
         case AST_VAR_DEC: decompileVarDec(node); break;
+        case AST_VEC_DEC: decompileVecDec(node); break;
         default: fprintf(stderr, "Error! Unknown node type!\n"); break;
     }
     return;
