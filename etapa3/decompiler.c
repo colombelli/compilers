@@ -87,7 +87,7 @@ void decompileFooDecArg(AST* node, int first){
 void decompileBlock(AST* node){
     fprintf(decompilationFile,"{");
     switchDecompilation(node->son[0]);
-    fprintf(decompilationFile,"\n};\n");
+    fprintf(decompilationFile,"};\n");
 }
 
 
@@ -112,6 +112,64 @@ void decompileFooDec(AST* node){
 }
 
 
+void decompileAttr(AST* node){
+    fprintf(decompilationFile, node->symbol->text);
+    fprintf(decompilationFile, "=");
+    switchDecompilation(node->son[0]);
+    return;
+}
+
+
+void decompileExprBinaryOp(AST* node, char* operation){
+    decompileExpr(node->son[0]);
+    fprintf(decompilationFile, operation);
+    decompileExpr(node->son[1]);
+    return;
+}
+
+
+void decompileExprUnaryOp(AST* node, char* operation){
+    fprintf(decompilationFile, operation);
+    decompileExpr(node->son[0]);
+    return;
+}
+
+
+void decompileExpr(AST* node){
+
+    if (node == NULL)
+        return;
+
+    if (node->type == AST_SYMBOL)
+        fprintf(decompilationFile, node->symbol->text);
+        
+
+    else {
+        fprintf(decompilationFile,"(");
+        switch(node->type){
+            case AST_ADD: decompileExprBinaryOp(node, "+"); break;
+            case AST_SUB: decompileExprBinaryOp(node, "-"); break;
+            case AST_MUL: decompileExprBinaryOp(node, "*"); break;
+            case AST_DIV: decompileExprBinaryOp(node, "/"); break;
+
+            case AST_EQ: decompileExprBinaryOp(node, "=="); break;
+            case AST_GE: decompileExprBinaryOp(node, ">="); break;
+            case AST_LE: decompileExprBinaryOp(node, "<="); break;
+            case AST_DIF: decompileExprBinaryOp(node, "!="); break;
+            case AST_GRE: decompileExprBinaryOp(node, ">"); break;
+            case AST_LES: decompileExprBinaryOp(node, "<"); break;
+            case AST_AND: decompileExprBinaryOp(node, "^"); break;
+            case AST_OR: decompileExprBinaryOp(node, "|"); break;
+
+            case AST_NOT: decompileExprUnaryOp(node, "~"); break;
+            default: fprintf(stderr, "Error! Unknown expression operator!\n"); break;
+        }
+        fprintf(decompilationFile,")");
+    }
+    return;
+}
+
+
 void switchDecompilation(AST* node){
     if (node == NULL)
         return;
@@ -122,6 +180,11 @@ void switchDecompilation(AST* node){
         case AST_VAR_DEC: decompileVarDec(node); break;
         case AST_VEC_DEC: decompileVecDec(node); break;
         case AST_FOO_DEC: decompileFooDec(node); break;
+        case AST_BLOCK: decompileBlock(node); break;
+        case AST_LCMD: fprintf(decompilationFile, "\n"); switchDecompilation(node->son[0]); break;
+        case AST_ATTR: decompileAttr(node); break;
+        case AST_SYMBOL: fprintf(decompilationFile, node->symbol->text);
+        case AST_ADD ... AST_NOT: decompileExpr(node); break;
         default: fprintf(stderr, "Error! Unknown node type!\n"); break;
     }
     return;
@@ -150,8 +213,7 @@ void decompile(FILE* outFile, AST* node){
 
 
 /*
-    switch(finalAST->type){
-        case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
+
         case AST_ADD: fprintf(stderr, "AST_ADD"); break;
         case AST_SUB: fprintf(stderr, "AST_SUB"); break;
         case AST_MUL: fprintf(stderr, "AST_MUL"); break;
@@ -166,9 +228,7 @@ void decompile(FILE* outFile, AST* node){
         case AST_OR: fprintf(stderr, "AST_OR"); break;
         case AST_NOT: fprintf(stderr, "AST_NOT"); break;
         case AST_VEC_SYMBOL: fprintf(stderr, "AST_VEC_SYMBOL"); break;
-        case AST_ATTR: fprintf(stderr, "AST_ATTR"); break;
         case AST_VEC_ATTR: fprintf(stderr, "AST_VEC_ATTR"); break;
-        case AST_LCMD: fprintf(stderr, "AST_LCMD"); break;
         case AST_IF: fprintf(stderr, "AST_IF"); break;
         case AST_IF_ELSE: fprintf(stderr, "AST_IF_ELSE"); break;
         case AST_WHILE: fprintf(stderr, "AST_WHILE"); break;
@@ -178,13 +238,6 @@ void decompile(FILE* outFile, AST* node){
         case AST_RETURN: fprintf(stderr, "AST_RETURN"); break;
         case AST_FOO_CALL: fprintf(stderr, "AST_FOO_CALL"); break;
         case AST_FOO_CALL_ARG: fprintf(stderr, "AST_FOO_CALL_ARG"); break;
-       
-        case AST_FOO_DEC: fprintf(stderr, "AST_FOO_DEC"); break;
-        case AST_FOO_DEC_HEADER: fprintf(stderr, "AST_FOO_DEC_HEADER"); break;
-        case AST_FOO_DEC_ARG: fprintf(stderr, "AST_FOO_DEC_ARG"); break;
-        case AST_BLOCK: fprintf(stderr, "AST_BLOCK"); break;
-        
 
-    }
 
 */
