@@ -34,7 +34,7 @@ int main (int argc, char **argv) {
   
   
   yyparse();
-  hashPrint();
+  //hashPrint();
   
   int semanticErrors = get_semantic_errors();
   if (semanticErrors > 0)

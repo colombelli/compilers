@@ -57,6 +57,7 @@
 typedef struct astnode
 {
     int type;
+    int datatype;  //useful to annotate resulting node type for arithmetic operands
     HASH_NODE *symbol;
     struct astnode *son[MAX_SONS];
 } AST;
