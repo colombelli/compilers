@@ -32,6 +32,7 @@ int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int lexType);
 void hashPrint(void);
+int hash_check_undeclared(void);
 
 #endif
 // END

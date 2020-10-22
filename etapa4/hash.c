@@ -66,3 +66,18 @@ void hashPrint(void){
     }
     printf("\n---- End of Hashtable ----\n\n");
 }
+
+
+int hash_check_undeclared(void){
+    int undeclared = 0;
+    HASH_NODE *node;
+    for(int i=0; i<HASH_SIZE; i++){
+        for(node=Hashtable[i]; node; node=node->next){
+            if (node->type == SYMBOL_IDENTIFIER){ //i.e. it was inserted on hash, but didn't received a specific type by semantic.c
+                fprintf(stderr, "Semantic ERROR! Undeclared identifier: %s\n", node->text);
+                ++undeclared;
+            }
+        }
+    }
+    return undeclared;
+}

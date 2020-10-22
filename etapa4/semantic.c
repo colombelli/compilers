@@ -51,5 +51,9 @@ void check_and_set_declarations(AST* node){
 }
 
 void check_undeclared(){
+    SemanticErrors += hash_check_undeclared();
+}
 
+int get_semantic_errors(){
+    return SemanticErrors;
 }

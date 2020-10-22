@@ -2,6 +2,7 @@
 #include "hash.h"
 #include "ast.h"
 #include "decompiler.h"
+#include "semantic.h"
 
 extern FILE *yyin;
 extern AST *finalAST;
@@ -15,7 +16,7 @@ int main (int argc, char **argv) {
   initMe();
 
   if (argc < 2){
-    fprintf(stderr, "Call: etapa1 fileName\n");
+    fprintf(stderr, "Call: etapa4 fileName decompFileName\n");
     exit(1);
   }
   
@@ -34,6 +35,11 @@ int main (int argc, char **argv) {
   
   yyparse();
   hashPrint();
+  
+  int semanticErrors = get_semantic_errors();
+  if (semanticErrors > 0)
+    exit(4);
+
   fprintf(stdout, "Compilation successful!\n");
   //fprintf(stdout, "Generated AST:\n\n");
   //astPrint(finalAST, 0);
