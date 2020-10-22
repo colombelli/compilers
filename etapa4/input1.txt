@@ -1,3 +1,7 @@
-a () = int {
-    if ( a==17 ) then else    
-};
+b = bool : FALSE;
+c = char : 'x';
+a = int: 0;
+i = int: 0;
+f = float: 0.0;
+v1 = int[10]: 77 28 0 0 0 0 0 0 0 0; 
+mat = int [ 10]; 

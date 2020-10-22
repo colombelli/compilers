@@ -61,7 +61,7 @@ void hashPrint(void){
     HASH_NODE *node;
     for(int i=0; i<HASH_SIZE; i++){
         for(node=Hashtable[i]; node; node=node->next){
-            printf("Address %d: %s (TYPE: %d)\n", i, node->text, node->type);
+            printf("Address %d: %s (TYPE: %d | DATATYPE: %d)\n", i, node->text, node->type, node->datatype);
         }
     }
     printf("\n---- End of Hashtable ----\n\n");
