@@ -72,14 +72,16 @@ int get_semantic_errors(){
 }
 
 
-int is_son_a_symbol_number(AST* son){
+int is_son_a_symbol_number_compatible(AST* son){
 
     if (
         (son->type == AST_SYMBOL) && ( 
                 (son->symbol->type == SYMBOL_LIT_INT) ||
+                (son->symbol->type == SYMBOL_LIT_CHAR) ||
                 (son->symbol->type == SYMBOL_LIT_FLOAT) || 
                 (   (son->symbol->type == SYMBOL_VARIABLE) && 
                     (   (son->symbol->datatype == DATATYPE_INT) ||
+                        (son->symbol->datatype == DATATYPE_CHAR) ||
                         (son->symbol->datatype == DATATYPE_FLOAT)
                     )
                 ) 
@@ -91,9 +93,10 @@ int is_son_a_symbol_number(AST* son){
 }
 
 
-int is_son_a_vec_number(AST* son){
+int is_son_a_vec_number_compatible(AST* son){
     if ( (son->type == AST_VEC_SYMBOL) && (
                 (son->symbol->datatype == DATATYPE_INT) ||
+                (son->symbol->datatype == DATATYPE_CHAR) ||
                 (son->symbol->datatype == DATATYPE_FLOAT)
         )
     ) return 1;
@@ -102,9 +105,10 @@ int is_son_a_vec_number(AST* son){
 }
 
 
-int is_son_a_foo_call_number(AST* son){
+int is_son_a_foo_call_number_compatible(AST* son){
    if ( (son->type == AST_FOO_CALL) && (
                 (son->symbol->datatype == DATATYPE_INT) ||
+                (son->symbol->datatype == DATATYPE_CHAR) ||
                 (son->symbol->datatype == DATATYPE_FLOAT)
         )
    ) return 1;
@@ -117,24 +121,24 @@ int is_number(AST* son){
 
     if ( 
         ( (son->type >= AST_ADD) && (son->type <= AST_DIV) ) || //arithmetic ops
-        is_son_a_symbol_number(son) ||
-        is_son_a_foo_call_number(son) ||
-        is_son_a_vec_number(son)
+        is_son_a_symbol_number_compatible(son) ||
+        is_son_a_foo_call_number_compatible(son) ||
+        is_son_a_vec_number_compatible(son)
     )   return 1;
 
     else return 0;
 }
 
 
-void check_artihmetic_operands(AST* node, char* operand){
+void check_numeric_compatible_operands(AST* node, char* operand){
 
     if (!is_number(node->son[0])) {
-        fprintf(stderr, "Semantic ERROR: invalid left operand for %s", operand);
+        fprintf(stderr, "Semantic ERROR: invalid left operand for %s.\n", operand);
         ++SemanticErrors;
     }
 
     if (!is_number(node->son[1])) {
-        fprintf(stderr, "Semantic ERROR: invalid right operand for %s", operand);
+        fprintf(stderr, "Semantic ERROR: invalid right operand for %s.\n", operand);
         ++SemanticErrors;
     }
 }
@@ -148,8 +152,20 @@ void check_operands(AST* node){
     int i;
 
     switch (node->type) {
-        case AST_ADD ... AST_DIV: 
-            check_artihmetic_operands(node, "addition");
+        case AST_ADD:  
+            check_numeric_compatible_operands(node, "addition");
+            break;
+        case AST_SUB:  
+            check_numeric_compatible_operands(node, "subtraction");
+            break;
+        case AST_MUL:  
+            check_numeric_compatible_operands(node, "multiplication");
+            break;
+        case AST_DIV:  
+            check_numeric_compatible_operands(node, "division");
+            break;
+        case AST_EQ ... AST_LES:  
+            check_numeric_compatible_operands(node, "comparsion");
             break;
     }
 
