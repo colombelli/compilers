@@ -1,0 +1,20 @@
+a=int:0;
+i=int:5;
+c=bool:10;
+main()=int
+{
+i=(i+a)
+{
+c=('a'>1)
+}
+};
+
+incc(x=int, n=int, a=int, b=float, c=bool)=float
+{
+a=1
+};
+
+asf(x=int, n=int, c=bool)=bool
+{
+c=TRUE
+};

@@ -34,12 +34,14 @@ int main (int argc, char **argv) {
   
   
   yyparse();
-  hashPrint();
+  
   
   int semanticErrors = get_semantic_errors();
   if (semanticErrors > 0)
-    exit(4);
+    //exit(4);
+    fprintf(stderr, "Semantic Errors: %d\n", semanticErrors);
 
+  hashPrint();
   fprintf(stdout, "Compilation successful!\n");
   //fprintf(stdout, "Generated AST:\n\n");
   astPrint(finalAST, 0);
