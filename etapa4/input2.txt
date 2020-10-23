@@ -6,12 +6,19 @@ main () = int {
     {
         c = 'a' > 1
     }
+    a = w
+    w = a
 };
 
-incc (x = int, n = int, a = int, b=float, c=bool) = float {
+incc (x = int, n = int, b=float, h=bool) = float {
     a = 1
+    a = x + n
+    //a= i[1]
+    //a= asf()
 };
 
-asf (x = int, n = int, c=bool) = bool {
+asf (x = int, n = int, h=bool) = bool {
     c = TRUE
+    h = b
+    e = 1
 };

@@ -41,10 +41,12 @@ int main (int argc, char **argv) {
     //exit(4);
     fprintf(stderr, "Semantic Errors: %d\n", semanticErrors);
 
-  hashPrint();
+
   fprintf(stdout, "Compilation successful!\n");
-  //fprintf(stdout, "Generated AST:\n\n");
-  astPrint(finalAST, 0);
+  
+  //hashPrint();
+  //astPrint(finalAST, 0);
+
   fprintf(stdout, "\n\nDecompiling...\n");
   decompile(decompilationOutputFile, finalAST);
   fprintf(stdout, "Decompilation successful!\n\n");

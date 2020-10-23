@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include "semantic.h"
+#include "stack.h"
 
 int SemanticErrors = 0;
-
+STACK_NODE* foo_stack = NULL;
 
 void compiler_error(){
     fprintf(stderr, "Compiler syntax analyzer implementation error! Please, consider reporting the bug.\n");
@@ -10,12 +12,15 @@ void compiler_error(){
 }
 
 
+
 void check_double_dec_and_set(HASH_NODE* symbol, AST* typeSon, int value){
     if (symbol) { //double check
-        if (symbol->type != SYMBOL_IDENTIFIER) {
+        if ((symbol->type != SYMBOL_IDENTIFIER) && (symbol->type != SYMBOL_OUT_OF_SCOPE)) {
+
             fprintf(stderr, "Semantic ERROR: identifier %s already declared\n", 
-                symbol->text);
+            symbol->text);
             ++SemanticErrors;
+            
         }
         symbol->type = value;
 
@@ -39,6 +44,7 @@ void check_double_dec_and_set(HASH_NODE* symbol, AST* typeSon, int value){
     }
     return;
 }
+
 
 
 void check_and_set_declarations(AST* node){
@@ -69,9 +75,64 @@ void check_and_set_declarations(AST* node){
     }
 }
 
-void check_undeclared(){
-    SemanticErrors += hash_check_undeclared();
+
+void is_symbol_undeclared_or_out_of_scope(HASH_NODE* symbol){
+    if (symbol->type == SYMBOL_IDENTIFIER){
+        fprintf(stderr, "Semantic ERROR: Undeclared identifier '%s'\n", symbol->text);
+        ++SemanticErrors;
+    }
+    else if (symbol->type == SYMBOL_OUT_OF_SCOPE){
+        fprintf(stderr, "Semantic ERROR: Parameter '%s' doesn't belong to this function scope, undeclared identifier.\n", symbol->text);
+        ++SemanticErrors;
+    }
+    return;   
 }
+
+
+void check_undeclared(AST* node){
+    if (node == 0)
+        return;
+
+    int i;
+
+    switch (node->type){
+        case AST_FOO_DEC:
+            pop_all_nodes(foo_stack);
+            foo_stack = NULL;
+            break;
+        
+        case AST_FOO_DEC_ARG:
+            check_double_dec_and_set(node->symbol, node->son[0], SYMBOL_PARAMETER);
+            foo_stack = push_node(foo_stack, node->symbol);
+            break;
+/*
+        case AST_SYMBOL:
+            is_symbol_undeclared_or_out_of_scope(node->symbol);
+            break;
+
+        case AST_VEC_SYMBOL:
+            is_symbol_undeclared_or_out_of_scope(node->symbol);
+            break;
+
+        case AST_FOO_CALL:
+            is_symbol_undeclared_or_out_of_scope(node->symbol);
+            break;*/
+        
+        default:
+            if (node->symbol)
+                    is_symbol_undeclared_or_out_of_scope(node->symbol);
+            break;
+    }
+
+    for (i=0; i<MAX_SONS; ++i){
+        check_undeclared(node->son[i]);
+    }
+}
+
+/*
+void get_hash_undeclareds(){
+    SemanticErrors += hash_check_undeclared();
+}*/
 
 int get_semantic_errors(){
     return SemanticErrors;
@@ -85,7 +146,8 @@ int is_son_a_symbol_number_compatible(AST* son){
                 (son->symbol->type == SYMBOL_LIT_INT) ||
                 (son->symbol->type == SYMBOL_LIT_CHAR) ||
                 (son->symbol->type == SYMBOL_LIT_FLOAT) || 
-                (   (son->symbol->type == SYMBOL_VARIABLE) && 
+                (   ((son->symbol->type == SYMBOL_VARIABLE) ||
+                     (son->symbol->type == SYMBOL_PARAMETER)) && 
                     (   (son->symbol->datatype == DATATYPE_INT) ||
                         (son->symbol->datatype == DATATYPE_CHAR) ||
                         (son->symbol->datatype == DATATYPE_FLOAT)
@@ -169,7 +231,9 @@ int is_son_a_boolean_symbol(AST* son){
         (son->type == AST_SYMBOL) && ( 
             (son->symbol->type == SYMBOL_LIT_TRUE) ||
             (son->symbol->type == SYMBOL_LIT_FALSE) ||
-            (   (son->symbol->type == SYMBOL_VARIABLE) && 
+            (   ((son->symbol->type == SYMBOL_VARIABLE) ||
+                (son->symbol->type == SYMBOL_PARAMETER)) 
+                && 
                 (son->symbol->datatype == DATATYPE_BOOL)
             )
         ) 
@@ -230,7 +294,6 @@ void check_boolean_operands(AST* node, char* operand, int binary){
 
 
 void check_operands(AST* node){
-
     if (node == 0)
         return;
 
@@ -287,7 +350,7 @@ void match_attr_type(int datatype, char* identifier, AST* son){
         (is_datatype_number_compatible(datatype) && !is_number(son)) ||
         ((datatype == DATATYPE_BOOL) && !is_boolean(son))
     ) {
-        fprintf(stderr, "Semantic ERROR: invalid type attribution for identifier %s!", identifier);
+        fprintf(stderr, "Semantic ERROR: invalid type attribution for identifier %s!\n", identifier);
         ++SemanticErrors;
     }
 

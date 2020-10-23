@@ -1,7 +1,6 @@
 #include "stack.h"
 
-
-STACK_NODE* push(STACK_NODE* head, HASH_NODE* symbol){ 
+STACK_NODE* push_node(STACK_NODE* head, HASH_NODE* symbol){ 
     STACK_NODE* newNode = (STACK_NODE*) calloc(1, sizeof(STACK_NODE));
     newNode->symbol =  symbol;
     newNode->next = head; 
@@ -10,9 +9,10 @@ STACK_NODE* push(STACK_NODE* head, HASH_NODE* symbol){
 } 
   
 
-STACK_NODE* pop(STACK_NODE* head){ 
+STACK_NODE* pop_node(STACK_NODE* head){ 
     if (head == NULL) 
-        return; 
+        return NULL; 
+    
     STACK_NODE* temp = head; 
     head = head->next;
     temp->symbol = NULL;  //i don't know if i need to, but it's better to prevent it from being freed
@@ -21,11 +21,11 @@ STACK_NODE* pop(STACK_NODE* head){
 } 
   
 
-void pop_all_function_ended(STACK_NODE* head){
+void pop_all_nodes(STACK_NODE* head){
 
     while (head != NULL){
-        head->symbol->datatype = SYMBOL_IDENTIFIER;
-        head = pop(head);
+        head->symbol->type = SYMBOL_OUT_OF_SCOPE;
+        head = pop_node(head);
     } 
     return;
 }

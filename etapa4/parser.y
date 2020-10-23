@@ -68,9 +68,9 @@
 %type<ast> init_lits
 
 
-%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '|'
 %left '^'
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '~' 
 %left '+' '-'
 %left '*' '/'
@@ -81,7 +81,7 @@
 programa: dec_lst   { 
                         $$ = $1;  finalAST = $$; 
                         check_and_set_declarations($1);
-                        check_undeclared();
+                        check_undeclared($1);
                         check_operands($1);
                         check_nature($1);
                     }

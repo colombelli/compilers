@@ -50,16 +50,6 @@ incn (x = int, n = int ) = int
   return x+n
   };
 
-incnn (x = int, n = int, a = int, b=float, c=bool ) = int
-  {
-  return x+n
-  };
-
-incnnn (x = int ) = int
-  {
-  return x+n
-  };
-
   
 
 
