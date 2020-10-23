@@ -4,6 +4,12 @@
 int SemanticErrors = 0;
 
 
+void compiler_error(){
+    fprintf(stderr, "Compiler syntax analyzer implementation error! Please, consider reporting the bug.\n");
+    exit(42);
+}
+
+
 void check_double_dec_and_set(HASH_NODE* symbol, AST* typeSon, int value){
     if (symbol) { //double check
         if (symbol->type != SYMBOL_IDENTIFIER) {
@@ -132,6 +138,10 @@ int is_number(AST* son){
 
 void check_numeric_compatible_operands(AST* node, char* operand){
 
+    if ((node->son[0]==0) || (node->son[1]==0))
+        compiler_error();
+
+
     if (!is_number(node->son[0])) {
         fprintf(stderr, "Semantic ERROR: invalid left operand for %s.\n", operand);
         ++SemanticErrors;
@@ -140,6 +150,81 @@ void check_numeric_compatible_operands(AST* node, char* operand){
     if (!is_number(node->son[1])) {
         fprintf(stderr, "Semantic ERROR: invalid right operand for %s.\n", operand);
         ++SemanticErrors;
+    }
+}
+
+
+int is_boolean_operand(int node_type){
+
+    switch (node_type) {
+        case AST_EQ ... AST_NOT: return 1; break;
+        default: return 0; break;
+    }
+}
+
+
+int is_son_a_boolean_symbol(AST* son){
+    
+    if (
+        (son->type == AST_SYMBOL) && ( 
+            (son->symbol->type == SYMBOL_LIT_TRUE) ||
+            (son->symbol->type == SYMBOL_LIT_FALSE) ||
+            (   (son->symbol->type == SYMBOL_VARIABLE) && 
+                (son->symbol->datatype == DATATYPE_BOOL)
+            )
+        ) 
+    ) return 1;
+    else return 0;
+}
+
+
+int is_son_a_boolean_foo_call(AST* son){
+    if ( (son->type == AST_FOO_CALL) &&
+         (son->symbol->datatype == DATATYPE_BOOL)
+   ) return 1;
+   else return 0;
+}
+
+
+int is_son_a_boolean_vec(AST* son){
+    if ( (son->type == AST_VEC_SYMBOL) && 
+         (son->symbol->datatype == DATATYPE_BOOL) 
+    ) return 1;
+    else return 0;
+}
+
+
+int is_boolean(AST* son){
+    
+    if (
+        is_boolean_operand(son->type) ||
+        is_son_a_boolean_symbol(son) ||
+        is_son_a_boolean_foo_call(son) ||
+        is_son_a_boolean_vec(son)
+    ) return 1;
+
+    else return 0;
+}
+
+
+void check_boolean_operands(AST* node, char* operand, int binary){
+
+    if (node->son[0]==0)
+        compiler_error();
+
+    if (!is_boolean(node->son[0])) {
+        fprintf(stderr, "Semantic ERROR: invalid left operand for %s.\n", operand);
+        ++SemanticErrors;
+    }
+
+    if (binary) {
+        if (node->son[1]==0)
+            compiler_error();
+
+        if (!is_boolean(node->son[1])) {
+            fprintf(stderr, "Semantic ERROR: invalid right operand for %s.\n", operand);
+            ++SemanticErrors;
+        }
     }
 }
 
@@ -167,10 +252,19 @@ void check_operands(AST* node){
         case AST_EQ ... AST_LES:  
             check_numeric_compatible_operands(node, "comparsion");
             break;
+
+        case AST_AND:
+            check_boolean_operands(node, "logical and", 1);
+            break;
+        case AST_OR:
+            check_boolean_operands(node, "logical or", 1);
+            break;
+        case AST_NOT:
+            check_boolean_operands(node, "logical not", 0);
+            break;
     }
 
     for (i=0; i<MAX_SONS; ++i){
         check_operands(node->son[i]);
     }
-
 }

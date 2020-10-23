@@ -6,15 +6,25 @@
 
 extern int SemanticErrors;
 
+void compiler_error(void);
+
 void check_double_dec_and_set(HASH_NODE* symbol, AST* typeSon, int value);
 void check_and_set_declarations(AST* node);
 void check_undeclared();
 void check_operands(AST* node);
+
 void check_numeric_compatible_operands(AST* node, char* operand);
 int is_son_a_symbol_number_compatible(AST* son);
 int is_son_a_vec_number_compatible(AST* son);
 int is_son_a_foo_call_number_compatible(AST* son);
 int is_number(AST* son);
+void check_boolean_operands(AST* node, char* operand, int binary);
+int is_boolean(AST* son);
+int is_boolean_operand(int node_type);
+int is_son_a_boolean_symbol(AST* son);
+int is_son_a_boolean_vec(AST* son);
+int is_son_a_boolean_foo_call(AST* son);
+
 int get_semantic_errors();
 
 #endif

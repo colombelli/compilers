@@ -5,6 +5,7 @@ i = int: 0;
 f = float: 0.0;
 v1 = int[10]: 77 28 0 0 0 0 0 0 0 0; 
 mat = int [ 10]; 
+bov = bool [1];
 
 main () = int
   {
@@ -17,8 +18,19 @@ main () = int
       b = 1 >= 'c'
       b = 1 == 'c'
       b = 1 != v1[2]
+      b = b | FALSE | 'c'
+      b = (b ^ TRUE) ^ (5 != 4) ^ (1+1)
+      b = ~b
+      //b = ~a
+      //b = ~one()
+      b = ~trueb()
+      b = trueb() | bov[2]
   };
 
 one () = int {
     return one
+};
+
+trueb () = bool {
+    return TRUE
 };
