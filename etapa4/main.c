@@ -34,7 +34,7 @@ int main (int argc, char **argv) {
   
   
   yyparse();
-  //hashPrint();
+  hashPrint();
   
   int semanticErrors = get_semantic_errors();
   if (semanticErrors > 0)
@@ -42,7 +42,7 @@ int main (int argc, char **argv) {
 
   fprintf(stdout, "Compilation successful!\n");
   //fprintf(stdout, "Generated AST:\n\n");
-  //astPrint(finalAST, 0);
+  astPrint(finalAST, 0);
   fprintf(stdout, "\n\nDecompiling...\n");
   decompile(decompilationOutputFile, finalAST);
   fprintf(stdout, "Decompilation successful!\n\n");

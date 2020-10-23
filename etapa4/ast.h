@@ -54,6 +54,12 @@
 #define AST_VEC_INIT_VAL 39
 
 
+#define RESULT_NOT_SET 0
+#define RESULT_IN_INT 1
+#define RESULT_IN_FLOAT 2
+#define RESULT_IN_CHAR 3
+#define RESULT_IN_BOOL 4
+
 typedef struct astnode
 {
     int type;

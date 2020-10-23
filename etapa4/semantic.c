@@ -268,3 +268,74 @@ void check_operands(AST* node){
         check_operands(node->son[i]);
     }
 }
+
+
+
+int is_datatype_number_compatible(int datatype){
+    if (
+        (datatype == DATATYPE_FLOAT) ||
+        (datatype == DATATYPE_INT) ||
+        (datatype == DATATYPE_CHAR)
+    ) return 1;
+    else return 0;
+}
+
+
+void match_attr_type(int datatype, char* identifier, AST* son){
+
+    if ( 
+        (is_datatype_number_compatible(datatype) && !is_number(son)) ||
+        ((datatype == DATATYPE_BOOL) && !is_boolean(son))
+    ) {
+        fprintf(stderr, "Semantic ERROR: invalid type attribution for identifier %s!", identifier);
+        ++SemanticErrors;
+    }
+
+}
+
+
+void check_nature(AST* node){
+
+    if (node == 0)
+        return;
+
+    int i;
+
+    switch (node->type) {
+        case AST_SYMBOL: 
+            if (node->symbol->type == SYMBOL_VECTOR || node->symbol->type == SYMBOL_FUNCTION){
+                fprintf(stderr, "Semantic ERROR: %s is not a variable!\n", node->symbol->text);
+                SemanticErrors++;
+            }
+            break;
+
+        case AST_VEC_SYMBOL: 
+            if (node->symbol->type != SYMBOL_VECTOR){
+                fprintf(stderr, "Semantic ERROR: %s is not a vector!\n", node->symbol->text);
+                SemanticErrors++;
+            }
+            break;
+
+        case AST_FOO_CALL: 
+            if (node->symbol->type != SYMBOL_FUNCTION){
+                fprintf(stderr, "Semantic ERROR: %s is not a function!\n", node->symbol->text);
+                SemanticErrors++;
+            }
+            break;
+
+        case AST_ATTR: 
+            match_attr_type(node->symbol->datatype, node->symbol->text, node->son[0]);
+            break;
+        
+        case AST_VEC_ATTR: 
+            match_attr_type(node->symbol->datatype, node->symbol->text, node->son[1]);
+            break;
+    }
+
+    for (i=0; i<MAX_SONS; ++i){
+        check_nature(node->son[i]);
+    }
+}
+
+
+

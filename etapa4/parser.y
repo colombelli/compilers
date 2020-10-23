@@ -83,6 +83,7 @@ programa: dec_lst   {
                         check_and_set_declarations($1);
                         check_undeclared();
                         check_operands($1);
+                        check_nature($1);
                     }
     ;
 

@@ -13,6 +13,8 @@ AST *astCreate(int type, HASH_NODE *symbol, AST* s0, AST* s1, AST* s2, AST* s3){
     newNode->son[2] = s2;
     newNode->son[3] = s3;
 
+    newNode->datatype = RESULT_NOT_SET;
+
     return newNode;
 }
 

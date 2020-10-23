@@ -7,11 +7,15 @@ v1 = int[10]: 77 28 0 0 0 0 0 0 0 0;
 mat = int [ 10]; 
 bov = bool [1];
 
+main () = int {
+f = c[10] + a() - i['a']
+};
+/*
 main () = int
   {
       a = a + (i + 100) / 9898 * f - f * v1[2.33]
       i = 'a' + 1 + c 
-      b = 2+2+4 > 5
+      /*b = 2+2+4 > 5
       b = 1 != 'c'
       b = 1 < 'c'
       b = 1 <= 'c'
@@ -25,6 +29,7 @@ main () = int
       //b = ~one()
       b = ~trueb()
       b = trueb() | bov[2]
+      a = f() +1
   };
 
 one () = int {
@@ -33,4 +38,4 @@ one () = int {
 
 trueb () = bool {
     return TRUE
-};
+};*/
