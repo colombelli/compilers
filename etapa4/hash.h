@@ -31,9 +31,18 @@ typedef struct hash_node {
     int type;
     char *text;
     int datatype;
+    struct args_list * foo_args;
     struct hash_node * next;
 
 } HASH_NODE;
+
+
+typedef struct args_list {
+    
+    HASH_NODE* arg;
+    struct args_list * next;
+
+} ARGS;
 
 
 void hashInit(void);
@@ -42,6 +51,8 @@ HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int lexType);
 void hashPrint(void);
 int hash_check_undeclared(void);
+
+void insert_symbol_arg(HASH_NODE* foo_symbol, HASH_NODE* new_parameter);
 
 #endif
 // END

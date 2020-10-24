@@ -5,6 +5,7 @@
 
 int SemanticErrors = 0;
 STACK_NODE* foo_stack = NULL;
+HASH_NODE* current_foo_identifier = NULL;
 
 void compiler_error(){
     fprintf(stderr, "Compiler syntax analyzer implementation error! Please, consider reporting the bug.\n");
@@ -47,7 +48,7 @@ void check_double_dec_and_set(HASH_NODE* symbol, AST* typeSon, int value){
 
 
 
-void check_and_set_declarations(AST* node){
+void check_and_set_declarations(AST* node){ //AND RETURN FOO VALUE
     if (node == 0)
         return;
 
@@ -64,9 +65,6 @@ void check_and_set_declarations(AST* node){
     
     case AST_FOO_DEC_HEADER:
         check_double_dec_and_set(node->symbol, node->son[0], SYMBOL_FUNCTION);
-        break;
-    
-    default:
         break;
     }
 
@@ -96,27 +94,20 @@ void check_undeclared(AST* node){
     int i;
 
     switch (node->type){
-        case AST_FOO_DEC:
+        case AST_FOO_DEC_HEADER:
+            current_foo_identifier = node->symbol;
             pop_all_nodes(foo_stack);
             foo_stack = NULL;
             break;
         
         case AST_FOO_DEC_ARG:
+            insert_symbol_arg(current_foo_identifier, node->symbol);
             check_double_dec_and_set(node->symbol, node->son[0], SYMBOL_PARAMETER);
             foo_stack = push_node(foo_stack, node->symbol);
             break;
-/*
-        case AST_SYMBOL:
-            is_symbol_undeclared_or_out_of_scope(node->symbol);
-            break;
 
-        case AST_VEC_SYMBOL:
-            is_symbol_undeclared_or_out_of_scope(node->symbol);
+        case AST_RETURN:
             break;
-
-        case AST_FOO_CALL:
-            is_symbol_undeclared_or_out_of_scope(node->symbol);
-            break;*/
         
         default:
             if (node->symbol)
@@ -129,10 +120,6 @@ void check_undeclared(AST* node){
     }
 }
 
-/*
-void get_hash_undeclareds(){
-    SemanticErrors += hash_check_undeclared();
-}*/
 
 int get_semantic_errors(){
     return SemanticErrors;

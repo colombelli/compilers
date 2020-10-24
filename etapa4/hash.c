@@ -49,7 +49,7 @@ HASH_NODE *hashInsert(char *text, int lexType){
     newNode->text = (char*) calloc(strlen(text) + 1, sizeof(char));
     strcpy(newNode->text, text);
     newNode->next = Hashtable[nodeAddress];
-
+    newNode->foo_args = NULL;
     Hashtable[nodeAddress] = newNode;
     return newNode;
 }
@@ -85,4 +85,22 @@ int hash_check_undeclared(void){
         }
     }
     return undeclared;
+}
+
+
+void insert_symbol_arg(HASH_NODE* foo_symbol, HASH_NODE* new_parameter){ //inserts the symbol in the end of the foo_args list
+
+    ARGS* arguments = foo_symbol->foo_args;
+    while(arguments)
+        arguments = arguments->next;
+
+    ARGS* newArg = (ARGS*)calloc(1, sizeof(ARGS));
+    newArg->arg = new_parameter;
+    newArg->next = NULL;
+
+    if (arguments)
+        arguments->next = newArg;
+    else
+        foo_symbol->foo_args = newArg;
+    return;
 }

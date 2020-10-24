@@ -21,4 +21,5 @@ asf (x = int, n = int, h=bool) = bool {
     c = TRUE
     h = b
     e = 1
+    return c
 };
