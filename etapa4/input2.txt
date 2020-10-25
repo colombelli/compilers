@@ -2,12 +2,13 @@ a = int: 0;
 i = int: 5;
 c = bool: 10;
 mat = int [10]; 
-main () = int {
+main (b=bool, h=int) = int {
     i = i + a
     {
         c = 'a' > 1
     }
     mat[c] = a
+    i = main(c)
 };
 
 /*

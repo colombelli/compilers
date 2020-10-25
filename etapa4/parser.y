@@ -84,6 +84,7 @@ programa: dec_lst   {
                         check_undeclared($1);
                         check_operands($1);
                         check_nature($1);
+                        check_foo_call_arguments($1);
                     }
     ;
 

@@ -396,21 +396,62 @@ void check_nature(AST* node){
 }
 
 
+void match_foo_arguments(AST* node){
+    ARGS* foo_argument = current_foo_identifier->foo_args;
+    AST* iter_node = node;
+
+    if (!node && foo_argument){
+        fprintf(stderr, "Semantic ERROR: function %s must receive its arguments\n", current_foo_identifier->text);
+        ++SemanticErrors;
+        return;
+    }
+
+
+    if (node && (node->type != AST_FOO_CALL_ARG) && foo_argument){ //it is being called without arguments
+        fprintf(stderr, "Semantic ERROR: must provide arguments for function %s\n", current_foo_identifier->text);
+        ++SemanticErrors;
+        return;
+    }
+
+
+    while(foo_argument){
+        if  (!iter_node){
+            fprintf(stderr, "Semantic ERROR: must provide argument %s for function %s\n", 
+                foo_argument->arg->text, current_foo_identifier->text);
+            ++SemanticErrors;
+            foo_argument= foo_argument->next;
+        } 
+        else {
+            if (iter_node->type != AST_FOO_CALL_ARG){
+                fprintf(stderr, "Semantic ERROR: must provide argument %s for function %s\n", 
+                    foo_argument->arg->text, current_foo_identifier->text);
+                ++SemanticErrors;
+            }
+            /*else{
+                
+            }*/
+            foo_argument = foo_argument->next;
+            iter_node = iter_node->son[1];
+        }
+    }
+
+    if (iter_node && (iter_node->type == AST_FOO_CALL_ARG)){
+        fprintf(stderr, "Semantic ERROR: too many arguments for function %s\n", current_foo_identifier->text);
+        ++SemanticErrors;
+    }
+    return;
+}
+
+
 void check_foo_call_arguments(AST* node){
 
     if (node == 0)
         return;
-
     int i;
 
-    switch (node->type) {
-        case AST_FOO_CALL: 
-            current_foo_identifier = node->symbol;
-            break;
-        
-        case AST_FOO_CALL_ARG:
-            
-            break; 
+    if (node->type == AST_FOO_CALL) {
+        current_foo_identifier = node->symbol;
+        match_foo_arguments(node->son[0]);
     }
 
     for (i=0; i<MAX_SONS; ++i){

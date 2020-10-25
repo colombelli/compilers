@@ -30,6 +30,10 @@ void check_nature(AST* node);
 int is_datatype_number_compatible(int datatype);
 void match_attr_type(int datatype, char* identifier, AST* son);
 
+
+void match_foo_arguments(AST* node);
+void check_foo_call_arguments(AST* node);
+
 int get_semantic_errors();
 
 #endif
