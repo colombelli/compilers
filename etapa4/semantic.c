@@ -427,9 +427,19 @@ void match_foo_arguments(AST* node){
                     foo_argument->arg->text, current_foo_identifier->text);
                 ++SemanticErrors;
             }
-            /*else{
-                
-            }*/
+            else{
+                //check son[0] type against expected parameter type
+                if (is_datatype_number_compatible(foo_argument->arg->datatype) && !is_number(iter_node->son[0])){
+                    fprintf(stderr, "Semantic ERROR: expected a number compatible parameter for argument '%s'\n", 
+                            foo_argument->arg->text);
+                    ++SemanticErrors;
+                }
+                else if ((foo_argument->arg->datatype == DATATYPE_BOOL) && !is_boolean(iter_node->son[0])){
+                    fprintf(stderr, "Semantic ERROR: expected a boolean compatible parameter for argument '%s'\n", 
+                            foo_argument->arg->text);
+                    ++SemanticErrors;
+                }
+            }
             foo_argument = foo_argument->next;
             iter_node = iter_node->son[1];
         }

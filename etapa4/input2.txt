@@ -2,13 +2,18 @@ a = int: 0;
 i = int: 5;
 c = bool: 10;
 mat = int [10]; 
-main (e=int) = int {
+main (e=int, w=bool) = int {
     i = i + a
     {
         c = 'a' > 1
     }
-    mat[main(a)] = a
+    mat[main(a, tru(a))] = a
     i = a
+    tru = a
+};
+
+tru() = float{
+
 };
 
 /*
