@@ -192,12 +192,12 @@ void check_numeric_compatible_operands(AST* node, char* operand){
 
 
     if (!is_number(node->son[0])) {
-        fprintf(stderr, "Semantic ERROR: invalid left operand for %s.\n", operand);
+        fprintf(stderr, "Semantic ERROR: invalid left operand for '%s'\n", operand);
         ++SemanticErrors;
     }
 
     if (!is_number(node->son[1])) {
-        fprintf(stderr, "Semantic ERROR: invalid right operand for %s.\n", operand);
+        fprintf(stderr, "Semantic ERROR: invalid right operand for '%s'\n", operand);
         ++SemanticErrors;
     }
 }
@@ -264,7 +264,7 @@ void check_boolean_operands(AST* node, char* operand, int binary){
         compiler_error();
 
     if (!is_boolean(node->son[0])) {
-        fprintf(stderr, "Semantic ERROR: invalid left operand for %s.\n", operand);
+        fprintf(stderr, "Semantic ERROR: invalid left operand for '%s'\n", operand);
         ++SemanticErrors;
     }
 
@@ -273,7 +273,7 @@ void check_boolean_operands(AST* node, char* operand, int binary){
             compiler_error();
 
         if (!is_boolean(node->son[1])) {
-            fprintf(stderr, "Semantic ERROR: invalid right operand for %s.\n", operand);
+            fprintf(stderr, "Semantic ERROR: invalid right operand for '%s'\n", operand);
             ++SemanticErrors;
         }
     }
@@ -337,7 +337,7 @@ void match_attr_type(int datatype, char* identifier, AST* son){
         (is_datatype_number_compatible(datatype) && !is_number(son)) ||
         ((datatype == DATATYPE_BOOL) && !is_boolean(son))
     ) {
-        fprintf(stderr, "Semantic ERROR: invalid type attribution for identifier %s!\n", identifier);
+        fprintf(stderr, "Semantic ERROR: invalid type attribution for identifier '%s'\n", identifier);
         ++SemanticErrors;
     }
 
@@ -354,28 +354,28 @@ void check_nature(AST* node){
     switch (node->type) {
         case AST_SYMBOL: 
             if (node->symbol->type == SYMBOL_VECTOR || node->symbol->type == SYMBOL_FUNCTION){
-                fprintf(stderr, "Semantic ERROR: %s is not a variable!\n", node->symbol->text);
+                fprintf(stderr, "Semantic ERROR: '%s' is not a variable!\n", node->symbol->text);
                 SemanticErrors++;
             }
             break;
 
         case AST_VEC_SYMBOL: 
             if (node->symbol->type != SYMBOL_VECTOR){
-                fprintf(stderr, "Semantic ERROR: %s is not a vector!\n", node->symbol->text);
+                fprintf(stderr, "Semantic ERROR: '%s' is not a vector!\n", node->symbol->text);
                 SemanticErrors++;
             }
             break;
 
         case AST_FOO_CALL: 
             if (node->symbol->type != SYMBOL_FUNCTION){
-                fprintf(stderr, "Semantic ERROR: %s is not a function!\n", node->symbol->text);
+                fprintf(stderr, "Semantic ERROR: '%s' is not a function!\n", node->symbol->text);
                 SemanticErrors++;
             }
             break;
 
         case AST_ATTR: 
             if (node->symbol->type != SYMBOL_VARIABLE){
-                fprintf(stderr, "Semantic ERROR: identifier %s is not a variable\n", node->symbol->text);
+                fprintf(stderr, "Semantic ERROR: identifier '%s' is not a variable\n", node->symbol->text);
                 ++SemanticErrors;
             } else
                 match_attr_type(node->symbol->datatype, node->symbol->text, node->son[0]);
@@ -383,7 +383,7 @@ void check_nature(AST* node){
         
         case AST_VEC_ATTR: 
             if (node->symbol->type != SYMBOL_VECTOR){
-                fprintf(stderr, "Semantic ERROR: identifier %s is not a vector\n", node->symbol->text);
+                fprintf(stderr, "Semantic ERROR: identifier '%s' is not a vector\n", node->symbol->text);
                 ++SemanticErrors;
             } else
                 match_attr_type(node->symbol->datatype, node->symbol->text, node->son[1]);
@@ -401,14 +401,14 @@ void match_foo_arguments(AST* node){
     AST* iter_node = node;
 
     if (!node && foo_argument){
-        fprintf(stderr, "Semantic ERROR: function %s must receive its arguments\n", current_foo_identifier->text);
+        fprintf(stderr, "Semantic ERROR: function '%s' must receive its arguments\n", current_foo_identifier->text);
         ++SemanticErrors;
         return;
     }
 
 
     if (node && (node->type != AST_FOO_CALL_ARG) && foo_argument){ //it is being called without arguments
-        fprintf(stderr, "Semantic ERROR: must provide arguments for function %s\n", current_foo_identifier->text);
+        fprintf(stderr, "Semantic ERROR: must provide arguments for function '%s'\n", current_foo_identifier->text);
         ++SemanticErrors;
         return;
     }
@@ -416,14 +416,14 @@ void match_foo_arguments(AST* node){
 
     while(foo_argument){
         if  (!iter_node){
-            fprintf(stderr, "Semantic ERROR: must provide argument %s for function %s\n", 
+            fprintf(stderr, "Semantic ERROR: must provide argument '%s' for function '%s'\n", 
                 foo_argument->arg->text, current_foo_identifier->text);
             ++SemanticErrors;
             foo_argument= foo_argument->next;
         } 
         else {
             if (iter_node->type != AST_FOO_CALL_ARG){
-                fprintf(stderr, "Semantic ERROR: must provide argument %s for function %s\n", 
+                fprintf(stderr, "Semantic ERROR: must provide argument '%s' for function '%s'\n", 
                     foo_argument->arg->text, current_foo_identifier->text);
                 ++SemanticErrors;
             }
@@ -436,7 +436,7 @@ void match_foo_arguments(AST* node){
     }
 
     if (iter_node && (iter_node->type == AST_FOO_CALL_ARG)){
-        fprintf(stderr, "Semantic ERROR: too many arguments for function %s\n", current_foo_identifier->text);
+        fprintf(stderr, "Semantic ERROR: too many arguments for function '%s'\n", current_foo_identifier->text);
         ++SemanticErrors;
     }
     return;

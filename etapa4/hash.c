@@ -90,17 +90,20 @@ int hash_check_undeclared(void){
 
 void insert_symbol_arg(HASH_NODE* foo_symbol, HASH_NODE* new_parameter){ //inserts the symbol in the end of the foo_args list
 
-    ARGS* arguments = foo_symbol->foo_args;
-    while(arguments)
-        arguments = arguments->next;
-
     ARGS* newArg = (ARGS*)calloc(1, sizeof(ARGS));
     newArg->arg = new_parameter;
     newArg->next = NULL;
 
-    if (arguments)
-        arguments->next = newArg;
-    else
+    if (!foo_symbol->foo_args){
         foo_symbol->foo_args = newArg;
+        return;
+    }
+
+    ARGS* arguments = foo_symbol->foo_args;
+    while(arguments->next)
+        arguments = arguments->next;
+
+    arguments->next = newArg;
+    
     return;
 }
