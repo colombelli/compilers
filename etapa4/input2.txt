@@ -1,25 +1,22 @@
 a = int: 0;
 i = int: 5;
 c = bool: 10;
+mat = int [10]; 
 main () = int {
     i = i + a
     {
         c = 'a' > 1
     }
-    a = w
-    w = a
+    mat[c] = a
 };
 
+/*
 incc (x = int, n = int, b=float, h=bool) = float {
     a = 1
     a = x + n
-    //a= i[1]
-    //a= asf()
 };
 
 asf (x = int, n = int, h=bool) = bool {
     c = TRUE
-    h = b
-    e = 1
     return c
-};
+};*/

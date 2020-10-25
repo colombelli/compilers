@@ -374,11 +374,19 @@ void check_nature(AST* node){
             break;
 
         case AST_ATTR: 
-            match_attr_type(node->symbol->datatype, node->symbol->text, node->son[0]);
+            if (node->symbol->type != SYMBOL_VARIABLE){
+                fprintf(stderr, "Semantic ERROR: identifier %s is not a variable\n", node->symbol->text);
+                ++SemanticErrors;
+            } else
+                match_attr_type(node->symbol->datatype, node->symbol->text, node->son[0]);
             break;
         
         case AST_VEC_ATTR: 
-            match_attr_type(node->symbol->datatype, node->symbol->text, node->son[1]);
+            if (node->symbol->type != SYMBOL_VECTOR){
+                fprintf(stderr, "Semantic ERROR: identifier %s is not a vector\n", node->symbol->text);
+                ++SemanticErrors;
+            } else
+                match_attr_type(node->symbol->datatype, node->symbol->text, node->son[1]);
             break;
     }
 
@@ -388,4 +396,24 @@ void check_nature(AST* node){
 }
 
 
+void check_foo_call_arguments(AST* node){
 
+    if (node == 0)
+        return;
+
+    int i;
+
+    switch (node->type) {
+        case AST_FOO_CALL: 
+            current_foo_identifier = node->symbol;
+            break;
+        
+        case AST_FOO_CALL_ARG:
+            
+            break; 
+    }
+
+    for (i=0; i<MAX_SONS; ++i){
+        check_foo_call_arguments(node->son[i]);
+    }    
+}
