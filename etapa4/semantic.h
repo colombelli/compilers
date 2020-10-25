@@ -33,7 +33,8 @@ void match_attr_type(int datatype, char* identifier, AST* son);
 
 void match_foo_arguments(AST* node);
 void check_foo_call_arguments(AST* node);
+void check_last_function_return(void);
 
-int get_semantic_errors();
+int get_semantic_errors(void);
 
 #endif

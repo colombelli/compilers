@@ -1,0 +1,33 @@
+a=int:0;
+i=int:5;
+c=bool:10;
+mat=int[10];
+wg=char:'a';
+main(e=int, w=bool)=int
+{
+i=(i+a)
+{
+c=('a'>1)
+}
+mat[main(a, (tru()))]=a
+i=a
+print "dsgj"
+return 10
+};
+
+aa()=bool
+{
+print "adifh"
+return TRUE
+};
+
+bb()=bool
+{
+print "adifh"
+};
+
+tru()=bool
+{
+print "adifh"
+return TRUE
+};

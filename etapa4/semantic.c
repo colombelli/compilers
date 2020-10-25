@@ -6,6 +6,7 @@
 int SemanticErrors = 0;
 STACK_NODE* foo_stack = NULL;
 HASH_NODE* current_foo_identifier = NULL;
+int flag_return = 0;
 
 void compiler_error(){
     fprintf(stderr, "Compiler syntax analyzer implementation error! Please, consider reporting the bug.\n");
@@ -95,9 +96,16 @@ void check_undeclared(AST* node){
 
     switch (node->type){
         case AST_FOO_DEC_HEADER:
+            if (!flag_return && current_foo_identifier){
+                fprintf(stderr, "Semantic ERROR: function '%s' doesn't have a return command\n", 
+                    current_foo_identifier->text);
+                ++SemanticErrors;
+            }
+
             current_foo_identifier = node->symbol;
             pop_all_nodes(foo_stack);
             foo_stack = NULL;
+            flag_return = 0;
             break;
         
         case AST_FOO_DEC_ARG:
@@ -107,6 +115,21 @@ void check_undeclared(AST* node){
             break;
 
         case AST_RETURN:
+            flag_return = 1;
+
+            if (is_datatype_number_compatible(current_foo_identifier->datatype) &&
+                !is_number(node->son[0])){
+                    fprintf(stderr, "Semantic ERROR: function '%s' must return a number compatible result\n",
+                            current_foo_identifier->text);
+                    ++SemanticErrors;
+                }
+
+            if ((current_foo_identifier->datatype == DATATYPE_BOOL) &&
+                !is_boolean(node->son[0])){
+                    fprintf(stderr, "Semantic ERROR: function '%s' must return a boolean compatible result\n",
+                            current_foo_identifier->text);
+                    ++SemanticErrors;
+                }
             break;
         
         default:
@@ -118,6 +141,15 @@ void check_undeclared(AST* node){
     for (i=0; i<MAX_SONS; ++i){
         check_undeclared(node->son[i]);
     }
+}
+
+void check_last_function_return(){
+    if (!flag_return && current_foo_identifier){
+        fprintf(stderr, "Semantic ERROR: function '%s' doesn't have a return command\n", 
+            current_foo_identifier->text);
+        ++SemanticErrors;
+    }
+    return;
 }
 
 
@@ -468,3 +500,4 @@ void check_foo_call_arguments(AST* node){
         check_foo_call_arguments(node->son[i]);
     }    
 }
+

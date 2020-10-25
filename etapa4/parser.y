@@ -85,6 +85,7 @@ programa: dec_lst   {
                         check_operands($1);
                         check_nature($1);
                         check_foo_call_arguments($1);
+                        check_last_function_return();
                     }
     ;
 
