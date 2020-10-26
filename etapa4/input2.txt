@@ -1,7 +1,7 @@
-a = int: 1;
+a = int: 'a';
 c = bool: TRUE;
 mat = int [10];
-v1 = int[10]: 77 28 0 0 0 0 0 0 0 0;  
+v1 = bool[3]: 77 'a' 0 1.4 TRUE;  
 wg = char: 'a';
 i = int: 0;
 main (e=int, w=bool) = int {

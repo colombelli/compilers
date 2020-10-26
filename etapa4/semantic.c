@@ -524,6 +524,65 @@ int match_dec_type(int datatype, char* identifier, AST* son){
     }
 }
 
+/*
+void check_vec_init(char* vec_identifier, int vec_datatype, int remaining_vals, AST* vec_val_node){
+
+    if (remaining_vals){
+        if(!vec_val_node || vec_val_node->type != AST_VEC_INIT_VAL){
+            fprintf(stderr, "Semantic ERROR: invalid number of initializer values for vector '%s'. %d remaining\n",
+                vec_identifier, remaining_vals);
+            ++SemanticErrors;
+        }
+
+        //check types
+        else if( is_datatype_number_compatible(vec_datatype) && 
+            !is_datatype_number_compatible(vec_val_node->son[0]->symbol->datatype)){
+                fprintf(stderr, "Semantic ERROR: invalid initializar type for vector '%s'\n", vec_identifier);
+                ++SemanticErrors;
+        }
+
+        else if ((vec_datatype == DATATYPE_BOOL) && 
+                (vec_val_node->son[0]->symbol->datatype != DATATYPE_BOOL)){
+            fprintf(stderr, "Semantic ERROR: invalid initializar type for vector '%s'\n", vec_identifier);
+                ++SemanticErrors;
+        }
+
+        else compiler_error();
+
+    }
+
+    else if (vec_val_node && (vec_val_node->type == AST_VEC_INIT_VAL)){
+        fprintf(stderr, "Semantic ERROR: too many initializer values for vector '%s'\n",
+                vec_identifier);
+            ++SemanticErrors;
+        return;
+    }
+
+    else //everything went fine
+        return;
+
+    check_vec_init(vec_identifier, vec_datatype, remaining_vals-1, vec_val_node->son[1]);
+}*/
+
+void check_vec_init(char* vec_identifier, int vec_datatype, AST* vec_val_node){
+
+    if(!vec_val_node || vec_val_node->type != AST_VEC_INIT_VAL)
+        return;
+
+    //check types
+    else if( is_datatype_number_compatible(vec_datatype) && 
+        !is_number(vec_val_node->son[0])){
+            fprintf(stderr, "Semantic ERROR: invalid initializar type for vector '%s'\n", vec_identifier);
+            ++SemanticErrors;
+    }
+
+    else if ((vec_datatype == DATATYPE_BOOL) && 
+            !is_boolean(vec_val_node->son[0])){
+        fprintf(stderr, "Semantic ERROR: invalid initializar type for vector '%s'\n", vec_identifier);
+            ++SemanticErrors;
+    }
+    check_vec_init(vec_identifier, vec_datatype, vec_val_node->son[1]);
+}
 
 void check_nature(AST* node){
 
@@ -581,6 +640,11 @@ void check_nature(AST* node){
         
         case AST_VAR_DEC:
             match_dec_type(node->symbol->datatype, node->symbol->text, node->son[1]);
+            break;
+
+        case AST_VEC_DEC:
+            if (node->son[2]) //then the vector is being initialized and needs to be checked
+                check_vec_init(node->symbol->text, node->symbol->datatype, node->son[2]);
             break;
     }
 
