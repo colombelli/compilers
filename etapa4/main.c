@@ -45,7 +45,7 @@ int main (int argc, char **argv) {
   fprintf(stdout, "Compilation successful!\n");
   
   //hashPrint();
-  //astPrint(finalAST, 0);
+  astPrint(finalAST, 0);
 
   fprintf(stdout, "\n\nDecompiling...\n");
   decompile(decompilationOutputFile, finalAST);

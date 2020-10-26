@@ -5,16 +5,14 @@ mat = int [10];
 wg = char: 'a';
 main (e=int, w=bool) = int {
     i = i + a
-    {
-        c = 'a' > 1 
-    }
-    mat[main(a, tru())] = a
+    mat[main(a, c) + 1 + 's'] = a
     i = a+i+5.10*0.12
 
     print "dsgj"
     return 10
 };
 
+/*
 aa() = bool{
     print "adifh"
     return TRUE
@@ -30,7 +28,6 @@ tru() = bool{
     return TRUE
 };
 
-/*
 incc (x = int, n = int, b=float, h=bool) = float {
     a = 1
     a = x + n

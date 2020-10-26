@@ -405,8 +405,8 @@ void set_expr_ast_datatype(AST* node){
             node->datatype = RESULTS_IN_BOOL;
         else if (node->symbol->type == SYMBOL_LIT_STRING)
             break;
-        else 
-            compiler_error();
+        //else 
+            //compiler_error();
         break;
     
     case AST_VEC_SYMBOL:
@@ -417,8 +417,8 @@ void set_expr_ast_datatype(AST* node){
             node->datatype = RESULTS_IN_FLOAT;
         else if (is_a_vec_or_foo_bool(node))
             node->datatype = RESULTS_IN_BOOL;
-        else        
-            compiler_error();
+        //else        
+            //compiler_error();
         break;
 
     case AST_ADD:
@@ -533,6 +533,10 @@ void check_nature(AST* node){
                 fprintf(stderr, "Semantic ERROR: '%s' is not a vector!\n", node->symbol->text);
                 SemanticErrors++;
             }
+            else if (node->son[0]->datatype != RESULTS_IN_INT) {
+                fprintf(stderr, "Semantic ERROR: vector '%s' index must be an integer resulting expression\n", node->symbol->text);
+                ++SemanticErrors;
+            }
             break;
 
         case AST_FOO_CALL: 
@@ -554,7 +558,12 @@ void check_nature(AST* node){
             if (node->symbol->type != SYMBOL_VECTOR){
                 fprintf(stderr, "Semantic ERROR: identifier '%s' is not a vector\n", node->symbol->text);
                 ++SemanticErrors;
-            } else
+            } 
+            else if (node->son[0]->datatype != RESULTS_IN_INT) {
+                fprintf(stderr, "Semantic ERROR: vector '%s' index must be an integer resulting expression\n", node->symbol->text);
+                ++SemanticErrors;
+            }
+            else
                 match_attr_type(node->symbol->datatype, node->symbol->text, node->son[1]);
             break;
     }
