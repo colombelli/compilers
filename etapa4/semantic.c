@@ -513,6 +513,18 @@ void match_attr_type(int datatype, char* identifier, AST* son){
 }
 
 
+int match_dec_type(int datatype, char* identifier, AST* son){
+
+    if ( 
+        (is_datatype_number_compatible(datatype) && !is_number(son)) ||
+        ((datatype == DATATYPE_BOOL) && !is_boolean(son))
+    ) {
+        fprintf(stderr, "Semantic ERROR: invalid value type for declaration of identifier '%s'\n", identifier);
+        ++SemanticErrors;
+    }
+}
+
+
 void check_nature(AST* node){
 
     if (node == 0)
@@ -565,6 +577,10 @@ void check_nature(AST* node){
             }
             else
                 match_attr_type(node->symbol->datatype, node->symbol->text, node->son[1]);
+            break;
+        
+        case AST_VAR_DEC:
+            match_dec_type(node->symbol->datatype, node->symbol->text, node->son[1]);
             break;
     }
 

@@ -1,8 +1,9 @@
-a = int: 0;
-i = int: 5;
-c = bool: 10;
-mat = int [10]; 
+a = int: 1;
+c = bool: TRUE;
+mat = int [10];
+v1 = int[10]: 77 28 0 0 0 0 0 0 0 0;  
 wg = char: 'a';
+i = int: 0;
 main (e=int, w=bool) = int {
     i = i + a
     mat[main(a, c) + 1 + 's'] = a

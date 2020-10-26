@@ -27,6 +27,7 @@ int is_son_a_boolean_vec(AST* son);
 int is_son_a_boolean_foo_call(AST* son);
 
 void check_nature(AST* node);
+int match_dec_type(int datatype, char* identifier, AST* son);
 int is_datatype_number_compatible(int datatype);
 void match_attr_type(int datatype, char* identifier, AST* son);
 
