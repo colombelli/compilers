@@ -35,6 +35,15 @@ void match_foo_arguments(AST* node);
 void check_foo_call_arguments(AST* node);
 void check_last_function_return(void);
 
+
+void set_expr_ast_datatype(AST* node);
+int is_a_vec_or_foo_bool(AST* node);
+int is_a_vec_or_foo_float(AST* node);
+int is_a_vec_or_foo_int(AST* node);
+int is_a_symbol_bool(AST* node);
+int is_a_symbol_float(AST* node);
+int is_a_symbol_int(AST* node);
+
 int get_semantic_errors(void);
 
 #endif

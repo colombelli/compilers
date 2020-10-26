@@ -81,6 +81,7 @@
 programa: dec_lst   { 
                         $$ = $1;  finalAST = $$; 
                         check_and_set_declarations($1);
+                        set_expr_ast_datatype($1);
                         check_undeclared($1);
                         check_operands($1);
                         check_nature($1);

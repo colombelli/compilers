@@ -55,10 +55,11 @@
 
 
 #define RESULT_NOT_SET 0
-#define RESULT_IN_INT 1
-#define RESULT_IN_FLOAT 2
-#define RESULT_IN_CHAR 3
-#define RESULT_IN_BOOL 4
+#define RESULTS_IN_INT 1
+#define RESULTS_IN_FLOAT 2
+#define RESULTS_IN_CHAR 3
+#define RESULTS_IN_BOOL 4
+#define RESULTS_IN_UNDEFINED 5
 
 typedef struct astnode
 {

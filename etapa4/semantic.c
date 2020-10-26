@@ -312,6 +312,143 @@ void check_boolean_operands(AST* node, char* operand, int binary){
 }
 
 
+int is_a_symbol_int(AST* node){
+    if (
+        (node->type == AST_SYMBOL) && ( 
+                (node->symbol->type == SYMBOL_LIT_INT) ||
+                (node->symbol->type == SYMBOL_LIT_CHAR) ||
+                (   ((node->symbol->type == SYMBOL_VARIABLE) ||
+                     (node->symbol->type == SYMBOL_PARAMETER)) && 
+                    (   (node->symbol->datatype == DATATYPE_INT) ||
+                        (node->symbol->datatype == DATATYPE_CHAR)
+                    )
+                ) 
+        )
+    ) return 1;
+    else return 0;
+}
+
+int is_a_symbol_float(AST* node){
+    if (
+        (node->type == AST_SYMBOL) && ( 
+                (node->symbol->type == SYMBOL_LIT_FLOAT) ||
+                (   ((node->symbol->type == SYMBOL_VARIABLE) ||
+                     (node->symbol->type == SYMBOL_PARAMETER)) && 
+                    (   (node->symbol->datatype == DATATYPE_FLOAT)
+                    )
+                ) 
+        )
+    ) return 1;
+    else return 0;
+}
+
+int is_a_symbol_bool(AST* node){
+    if (
+        (node->type == AST_SYMBOL) && ( 
+                (node->symbol->type == SYMBOL_LIT_FALSE) ||
+                (node->symbol->type == SYMBOL_LIT_TRUE) ||
+                (   ((node->symbol->type == SYMBOL_VARIABLE) ||
+                     (node->symbol->type == SYMBOL_PARAMETER)) && 
+                    (   (node->symbol->datatype == DATATYPE_BOOL)
+                    )
+                ) 
+        )
+    ) return 1;
+    else return 0;
+}
+
+
+int is_a_vec_or_foo_int(AST* node){
+    if ( ((node->type == AST_VEC_SYMBOL) ||
+         (node->type == AST_FOO_CALL)) && (
+            (node->symbol->datatype == DATATYPE_INT) ||
+            (node->symbol->datatype == DATATYPE_CHAR)
+        )
+    ) return 1;
+    else return 0;
+}
+
+int is_a_vec_or_foo_float(AST* node){
+    if ( ((node->type == AST_VEC_SYMBOL) ||
+         (node->type == AST_FOO_CALL)) && 
+        (node->symbol->datatype == DATATYPE_FLOAT)
+    ) return 1;
+    else return 0;
+}
+
+int is_a_vec_or_foo_bool(AST* node){
+    if ( ((node->type == AST_VEC_SYMBOL) ||
+         (node->type == AST_FOO_CALL)) && 
+        (node->symbol->datatype == DATATYPE_BOOL)
+    ) return 1;
+    else return 0;
+}
+
+
+void set_expr_ast_datatype(AST* node){
+
+    if (!node)
+        return;
+
+    if (node->son[0] && node->son[0]->datatype == RESULT_NOT_SET)
+        set_expr_ast_datatype(node->son[0]);  //recursion to the left
+    if (node->son[1] && node->son[1]->datatype == RESULT_NOT_SET)
+        set_expr_ast_datatype(node->son[1]);  //recursion to the right
+
+    switch (node->type){
+    case AST_SYMBOL:
+        if (is_a_symbol_int(node))
+            node->datatype = RESULTS_IN_INT;
+        else if (is_a_symbol_float(node))
+            node->datatype = RESULTS_IN_FLOAT;
+        else if (is_a_symbol_bool(node))
+            node->datatype = RESULTS_IN_BOOL;
+        else if (node->symbol->type == SYMBOL_LIT_STRING)
+            break;
+        else 
+            compiler_error();
+        break;
+    
+    case AST_VEC_SYMBOL:
+    case AST_FOO_CALL:
+        if (is_a_vec_or_foo_int(node))
+            node->datatype = RESULTS_IN_INT;
+        else if (is_a_vec_or_foo_float(node))
+            node->datatype = RESULTS_IN_FLOAT;
+        else if (is_a_vec_or_foo_bool(node))
+            node->datatype = RESULTS_IN_BOOL;
+        else        
+            compiler_error();
+        break;
+
+    case AST_ADD:
+    case AST_SUB:
+    case AST_MUL:
+    case AST_DIV:
+        if ((node->son[0]->datatype == RESULTS_IN_INT) &&
+            (node->son[1]->datatype == RESULTS_IN_INT))
+            node->datatype = RESULTS_IN_INT;
+
+        else if ((node->son[0]->datatype == RESULTS_IN_FLOAT) &&
+                ((node->son[1]->datatype == RESULTS_IN_INT) ||
+                (node->son[1]->datatype == RESULTS_IN_FLOAT)))
+            node->datatype = RESULTS_IN_FLOAT;
+        
+        else if ((node->son[0]->datatype == RESULTS_IN_INT) &&
+                (node->son[1]->datatype == RESULTS_IN_FLOAT))
+            node->datatype = RESULTS_IN_FLOAT;
+        
+        else
+            node->datatype = RESULTS_IN_UNDEFINED; //compiler error?
+        break;
+    
+    default:
+        node->datatype = RESULTS_IN_UNDEFINED; //to avoid recursion loop
+        break;
+    }
+}
+
+
 void check_operands(AST* node){
     if (node == 0)
         return;

@@ -73,9 +73,9 @@ void astPrint(AST *node, int level){
     }
 
     if (node->symbol != 0)
-        fprintf(stderr, ",%s\n", node->symbol->text);
+        fprintf(stderr, " %s | DataType:%d\n", node->symbol->text, node->datatype);
     else
-        fprintf(stderr, ",0\n");
+        fprintf(stderr, " | DataType:%d\n", node->datatype);
 
     for (i=0; i<MAX_SONS; ++i){
         astPrint(node->son[i], level+1);
