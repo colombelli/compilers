@@ -2,6 +2,7 @@
     #include "hash.h"
     #include "ast.h"
     #include "semantic.h"
+    #include "tac.h"
 
     int yyerror();
     int getLineNumber();
@@ -87,6 +88,7 @@ programa: dec_lst   {
                         check_nature($1);
                         check_foo_call_arguments($1);
                         check_last_function_return();
+                        tac_print_backwards(generate_code($1));
                     }
     ;
 
