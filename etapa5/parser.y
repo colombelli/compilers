@@ -81,6 +81,8 @@
 
 programa: dec_lst   { 
                         $$ = $1;  finalAST = $$; 
+                        
+                        // semantic checks
                         check_and_set_declarations($1);
                         set_expr_ast_datatype($1);
                         check_undeclared($1);
@@ -88,6 +90,13 @@ programa: dec_lst   {
                         check_nature($1);
                         check_foo_call_arguments($1);
                         check_last_function_return();
+                        int semanticErrors = get_semantic_errors();
+                        if (semanticErrors > 0){
+                            fprintf(stderr, "Semantic Errors: %d\n", semanticErrors);
+                            exit(4);
+                        }
+
+                        // tac generation
                         tac_print_backwards(generate_code($1));
                     }
     ;

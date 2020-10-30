@@ -20,6 +20,7 @@ void tac_print(TAC* tac){
     if (!tac)
         return;
 
+    if (tac->type == TAC_SYMBOL) return;
     fprintf(stderr, "TAC(");
 
     switch (tac->type){
@@ -29,6 +30,29 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_ADD"); break;
     case TAC_SUB:
         fprintf(stderr, "TAC_SUB"); break;
+    case TAC_MUL:
+        fprintf(stderr, "TAC_MUL"); break;
+    case TAC_DIV:
+        fprintf(stderr, "TAC_DIV"); break;
+    case TAC_EQ:
+        fprintf(stderr, "TAC_EQ"); break;
+    case TAC_GE:
+        fprintf(stderr, "TAC_GE"); break;
+    case TAC_LE:
+        fprintf(stderr, "TAC_LE"); break;
+    case TAC_DIF:
+        fprintf(stderr, "TAC_DIF"); break;
+    case TAC_GRE:
+        fprintf(stderr, "TAC_GRE"); break;
+    case TAC_LES:
+        fprintf(stderr, "TAC_LES"); break;
+    case TAC_AND:
+        fprintf(stderr, "TAC_AND"); break;
+    case TAC_OR:
+        fprintf(stderr, "TAC_OR"); break;
+    
+    case TAC_COPY:
+        fprintf(stderr, "TAC_COPY"); break;
     
     default: fprintf(stderr, "TAC_UNKNOWN"); break;
     }
@@ -71,6 +95,13 @@ TAC* tac_join(TAC* l1, TAC* l2){
 }
 
 
+TAC* create_tac_bin_op(int tac_type, TAC* son1, TAC* son2){
+
+    return tac_join(tac_join(son1, son2),
+            tac_create(tac_type, make_temp(), son1?son1->res:0, son2?son2->res:0)); 
+}
+
+
 
 TAC* generate_code(AST* node){
 
@@ -89,9 +120,21 @@ TAC* generate_code(AST* node){
     switch (node->type){
     
     case AST_SYMBOL:
-        result = tac_create(TAC_SYMBOL,node->symbol,0,0); break;
+        result = tac_create(TAC_SYMBOL,node->symbol,0,0); 
+        break;
     
+
+    // IMPORTANT NOTE: THE TAC TYPES  VALUE FOR BIN OPERATORS ARE THE SAME
+    // FOR THE AST TYPES (AST_ADD == 2 == TAC_ADD)
+    case AST_ADD ... AST_OR: 
+        result = create_tac_bin_op(node->type, code[0], code[1]);
+        break;
+
     
+
+    case AST_ATTR:
+        result = tac_join(code[0], tac_create(TAC_COPY,node->symbol, code[0]?code[0]->res:0, 0));
+        break;
     
     default: 
         result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));

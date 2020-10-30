@@ -54,5 +54,7 @@ int hash_check_undeclared(void);
 
 void insert_symbol_arg(HASH_NODE* foo_symbol, HASH_NODE* new_parameter);
 
+HASH_NODE* make_temp(void);
+
 #endif
 // END
