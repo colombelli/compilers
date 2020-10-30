@@ -1,0 +1,40 @@
+a = int: 'a';
+c = bool: TRUE;
+mat = int [10];
+v1 = int[3]: 77 'a' 0 1.4;  
+wg = char: 'a';
+i = int: 0;
+main (e=int, w=bool) = int {
+    i = i + a
+    mat[main(a, c) + 1 + 's'] = a
+    i = a+i+5.10*0.12
+
+    print "dsgj"
+    return 10
+};
+
+/*
+aa() = bool{
+    print "adifh"
+    return TRUE
+};
+
+bb() = bool{
+    print "adifh"
+    return c ^ c
+};
+
+tru() = bool{
+    print "adifh"
+    return TRUE
+};
+
+incc (x = int, n = int, b=float, h=bool) = float {
+    a = 1
+    a = x + n
+};
+
+asf (x = int, n = int, h=bool) = bool {
+    c = TRUE
+    return c
+};*/
