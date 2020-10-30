@@ -20,12 +20,11 @@ main () = int
       b = 1 == 'c'
       b = 1 != v1[2]
       b = b | FALSE
-      b = (b ^ TRUE) ^ (5 != 4)
-      b = ~b
+      b = ~(b ^ TRUE) ^ (5 != 4)
       //b = ~a
       //b = ~one()
-      b = ~trueb()
-      b = trueb() | bov[2]
+      b = ~trueb(1)
+      b = trueb(2) | bov[2]
       a = f +1
 
       return 10
@@ -35,6 +34,6 @@ one () = int {
     return 1
 };
 
-trueb () = bool {
+trueb (x = int) = bool {
     return TRUE
 };

@@ -50,6 +50,8 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_AND"); break;
     case TAC_OR:
         fprintf(stderr, "TAC_OR"); break;
+    case TAC_NOT:
+        fprintf(stderr, "TAC_NOT"); break;
     
     case TAC_COPY:
         fprintf(stderr, "TAC_COPY"); break;
@@ -128,6 +130,10 @@ TAC* generate_code(AST* node){
     // FOR THE AST TYPES (AST_ADD == 2 == TAC_ADD)
     case AST_ADD ... AST_OR: 
         result = create_tac_bin_op(node->type, code[0], code[1]);
+        break;
+
+    case AST_NOT:
+        result = tac_join(code[0], tac_create(TAC_NOT, make_temp(), code[0]?code[0]->res:0, 0));
         break;
 
     
