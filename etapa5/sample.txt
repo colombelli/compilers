@@ -43,6 +43,9 @@ main () = int
     }
   else
     print "OK!\n"
+
+  return 1
+
   };
 
 incn (x = int, n = int ) = int

@@ -23,6 +23,9 @@
 
 #define TAC_NOT 14
 
+#define TAC_JFALSE 15
+#define TAC_LABEL 16
+
 #define TAC_COPY 42
 
 
@@ -42,6 +45,9 @@ void tac_print_backwards(TAC* tac);
 TAC* tac_join(TAC* l1, TAC* l2);
 
 TAC* create_tac_bin_op(int tac_type, TAC* son1, TAC* son2);
+TAC* create_tac_if(TAC* son1, TAC* son2);
+
+
 
 // CODE GENERATION
 TAC* generate_code(AST* node);

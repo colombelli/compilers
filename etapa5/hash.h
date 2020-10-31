@@ -20,6 +20,8 @@
 #define SYMBOL_PARAMETER 11
 #define SYMBOL_OUT_OF_SCOPE 12
 
+#define SYMBOL_LABEL 13
+
 #define DATATYPE_INT 1
 #define DATATYPE_FLOAT 2
 #define DATATYPE_CHAR 3
@@ -55,6 +57,7 @@ int hash_check_undeclared(void);
 void insert_symbol_arg(HASH_NODE* foo_symbol, HASH_NODE* new_parameter);
 
 HASH_NODE* make_temp(void);
+HASH_NODE* make_label(void);
 
 #endif
 // END

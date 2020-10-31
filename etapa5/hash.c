@@ -120,3 +120,12 @@ HASH_NODE* make_temp(){
     sprintf(buffer, "mYWeeirT_emp%d", serial++);
     hashInsert(buffer, SYMBOL_VARIABLE);
 }
+
+
+HASH_NODE* make_label(){
+    static int serial = 0;
+    char buffer[256] = "";
+
+    sprintf(buffer, "mYLabule_%d", serial++);
+    hashInsert(buffer, SYMBOL_LABEL);
+}
