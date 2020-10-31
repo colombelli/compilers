@@ -52,13 +52,13 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_OR"); break;
     case TAC_NOT:
         fprintf(stderr, "TAC_NOT"); break;
-    case TAC_JFALSE:
-        fprintf(stderr, "TAC_JFALSE"); break;
+    case TAC_IFZ:
+        fprintf(stderr, "TAC_IFZ"); break;
     case TAC_LABEL:
         fprintf(stderr, "TAC_LABEL"); break;
     
-    case TAC_COPY:
-        fprintf(stderr, "TAC_COPY"); break;
+    case TAC_MOVE:
+        fprintf(stderr, "TAC_MOVE"); break;
     
     default: fprintf(stderr, "TAC_UNKNOWN"); break;
     }
@@ -116,7 +116,7 @@ TAC* create_tac_if(TAC* son1, TAC* son2){
 
     newlabel = make_label();
 
-    jumptac = tac_create(TAC_JFALSE, 0, son1?son1->res:0, 0);
+    jumptac = tac_create(TAC_IFZ, newlabel, son1?son1->res:0, 0);
     jumptac->prev = son1;
     labeltac = tac_create(TAC_LABEL,newlabel,0,0);
     labeltac->prev = son2;
@@ -162,7 +162,7 @@ TAC* generate_code(AST* node){
     
 
     case AST_ATTR:
-        result = tac_join(code[0], tac_create(TAC_COPY,node->symbol, code[0]?code[0]->res:0, 0));
+        result = tac_join(code[0], tac_create(TAC_MOVE,node->symbol, code[0]?code[0]->res:0, 0));
         break;
 
     case AST_IF:

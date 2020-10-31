@@ -23,11 +23,20 @@
 
 #define TAC_NOT 14
 
-#define TAC_JFALSE 15
+#define TAC_IFZ 15      //jump if false
 #define TAC_LABEL 16
+#define TAC_BEGINFUN 17
+#define TAC_ENDFUN 18
+#define TAC_IFZ 19
+#define TAC_JUMP 20
+#define TAC_CALL 21
+#define TAC_ARG 22
+#define TAC_RET 23      //return
+#define TAC_PRINT 24
+#define TAC_READ 25
 
-#define TAC_COPY 42
-
+#define TAC_MOVE 42
+#define TAC_MOVE_VEC 43
 
 typedef struct tac_node{
     int type;

@@ -32,7 +32,8 @@ main () = int
   print "\n"
 
   if (a==15) then 
-    print "A=15\n"
+    {a=99
+    print "A=15\n"}
 
   if ( a==15 | a==17 ) then
     print "A igual a 15 ou 17\n"
