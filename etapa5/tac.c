@@ -146,7 +146,7 @@ TAC* create_tac_if_else(TAC* son1, TAC* son2, TAC* son3){
     jumpz_tac = tac_create(TAC_IFZ, label_else, son1?son1->res:0, 0);
     jumpz_tac->prev = son1;
 
-    jump_tac = tac_create(TAC_JUMP, label_after_else, son2?son2->res:0, 0);
+    jump_tac = tac_create(TAC_JUMP, label_after_else, 0, 0);
     jump_tac->prev = son2;
 
     label_else_tac = tac_create(TAC_LABEL,label_else,0,0);
@@ -158,6 +158,37 @@ TAC* create_tac_if_else(TAC* son1, TAC* son2, TAC* son3){
     
     tac_join(jumpz_tac, jump_tac);
     return tac_join(label_else_tac,  label_after_else_tac);
+}
+
+
+TAC* create_tac_while(TAC* son1, TAC* son2){
+
+    TAC* jumpz = 0;
+    TAC* jump = 0;
+
+    TAC* label_before_tac = 0;
+    TAC* label_after_tac = 0;
+    
+    HASH_NODE* label_before = 0;
+    HASH_NODE* label_after = 0;
+    label_before = make_label();
+    label_after = make_label();
+
+
+    label_before_tac = tac_create(TAC_LABEL,label_before,0,0);
+    label_before_tac->prev = son1;
+
+    jumpz = tac_create(TAC_IFZ, label_after, son1?son1->res:0, 0);
+    jumpz->prev = label_before_tac;
+
+    jump = tac_create(TAC_JUMP, label_before, 0, 0);
+    jump->prev = son2;
+
+    label_after_tac = tac_create(TAC_LABEL,label_after,0,0);
+    label_after_tac->prev = jump;
+
+    tac_join(jumpz, jump);
+    return label_after_tac;
 }
 
 
@@ -209,6 +240,10 @@ TAC* generate_code(AST* node){
 
     case AST_IF_ELSE:
         result = create_tac_if_else(code[0], code[1], code[2]);
+        break;
+
+    case AST_WHILE:
+        result = create_tac_while(code[0], code[1]);
         break;
     
     default: 

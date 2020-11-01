@@ -41,6 +41,11 @@ trueb (x = int) = bool {
         a=1
         i=10+10
         a=x
+        while (i<10)
+        {
+            i = i+1
+            a = a-1
+        }
     }
     else {
         i=10+10
