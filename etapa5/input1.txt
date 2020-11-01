@@ -43,7 +43,10 @@ trueb (x = int) = bool {
             a = a-1
         }
 
-
+    print "yoo", a, 326-328*a, b
+    print "yiii"
+    read a
+    read b
     mat[1+5*9] = 10
-    return TRUE
+    return a+2*10 > 1
 };

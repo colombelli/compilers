@@ -58,6 +58,12 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_LABEL"); break;
     case TAC_JUMP:
         fprintf(stderr, "TAC_JUMP"); break;
+    case TAC_PRINT:
+        fprintf(stderr, "TAC_PRINT"); break;
+    case TAC_READ:
+        fprintf(stderr, "TAC_READ"); break;
+    case TAC_RET:
+        fprintf(stderr, "TAC_RET"); break;
     
     case TAC_MOVE:
         fprintf(stderr, "TAC_MOVE"); break;
@@ -261,6 +267,10 @@ TAC* generate_code(AST* node){
         result = tac_join(code[0], tac_create(TAC_MOVE,node->symbol, code[0]?code[0]->res:0, 0));
         break;
     
+    case AST_VAR_DEC:
+        result = tac_join(code[0], tac_create(TAC_MOVE,node->symbol, code[1]?code[1]->res:0, 0));
+        break;
+    
     case AST_VEC_ATTR: 
         result = tac_join(code[0], 
                     tac_create(TAC_MOVE_VEC,node->symbol, code[0]?code[0]->res:0, code[1]?code[1]->res:0));
@@ -281,7 +291,22 @@ TAC* generate_code(AST* node){
     case AST_LOOP:
         result = create_tac_loop(node->symbol, code[0], code[1], code[2], code[3]);
         break;
+
+    case AST_LPRINT:
+        if (code[0] && code[0]->type != TAC_SYMBOL)
+            result = tac_join(tac_join(code[0], tac_create(TAC_PRINT, code[0]?code[0]->res:0, 0, 0)), code[1]);
+        else
+            result = tac_join(tac_create(TAC_PRINT, code[0]?code[0]->res:0, 0, 0), code[1]);
+        break;
     
+    case AST_READ:
+        result = tac_create(TAC_READ, node->symbol, 0, 0);
+        break;
+    
+    case AST_RETURN:
+        result = tac_join(code[0], tac_create(TAC_RET, 0, code[0]?code[0]->res:0, 0));
+        break;
+
     default: 
         result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));
         break;

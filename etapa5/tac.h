@@ -56,6 +56,7 @@ TAC* create_tac_bin_op(int tac_type, TAC* son1, TAC* son2);
 TAC* create_tac_if(TAC* son1, TAC* son2);
 TAC* create_tac_if_else(TAC* son1, TAC* son2, TAC* son3);
 TAC* create_tac_while(TAC* son1, TAC* son2);
+TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* son4);
 
 
 // CODE GENERATION
