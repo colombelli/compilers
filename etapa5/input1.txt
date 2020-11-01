@@ -36,22 +36,13 @@ one () = int {
 
 trueb (x = int) = bool {
     
-    if (b) then {
-        mat[1] = 5
-        a=1
-        i=10+10
-        a=x
-        while (i<10)
+
+        loop (i:1*10-6,10+a,1-1+2)
         {
             i = i+1
             a = a-1
         }
-    }
-    else {
-        i=10+10
-        a=x
-        b=FALSE
-    }
+
 
     mat[1+5*9] = 10
     return TRUE

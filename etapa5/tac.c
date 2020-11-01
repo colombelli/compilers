@@ -192,6 +192,38 @@ TAC* create_tac_while(TAC* son1, TAC* son2){
 }
 
 
+TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* son4){
+
+    HASH_NODE* label_before = make_label();
+    HASH_NODE* label_after = make_label();
+    HASH_NODE* temp_test = make_temp();
+    HASH_NODE* temp_add = make_temp();
+   
+    TAC* init_i = tac_create(TAC_MOVE, symbol, son1?son1->res:0, 0);
+    TAC* label_loop = tac_create(TAC_LABEL, label_before, 0, 0);
+    TAC* les_test = tac_create(TAC_LES, temp_test, symbol, son2?son2->res:0);
+    TAC* jumpz = tac_create(TAC_IFZ, label_after, temp_test, 0);
+    TAC* add_i = tac_create(TAC_ADD, temp_add, symbol, son3?son3->res:0);
+    TAC* update_i = tac_create(TAC_MOVE, symbol, temp_add, 0);   
+    TAC* jump = tac_create(TAC_JUMP, label_before, 0, 0); 
+    TAC* label_exit = tac_create(TAC_LABEL, label_after, 0, 0);
+
+
+
+    init_i->prev = tac_join(son1, tac_join(son2, son3));
+    label_loop->prev = init_i;
+    les_test->prev = label_loop;
+    jumpz->prev = les_test;
+    add_i->prev = jumpz;
+    update_i->prev = add_i;
+    jump->prev = son4;
+    label_exit->prev = tac_join(update_i, jump);
+
+    return label_exit;
+}
+
+
+
 TAC* generate_code(AST* node){
 
     TAC* result = 0;
@@ -244,6 +276,10 @@ TAC* generate_code(AST* node){
 
     case AST_WHILE:
         result = create_tac_while(code[0], code[1]);
+        break;
+    
+    case AST_LOOP:
+        result = create_tac_loop(node->symbol, code[0], code[1], code[2], code[3]);
         break;
     
     default: 
