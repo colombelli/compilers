@@ -64,11 +64,13 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_READ"); break;
     case TAC_RET:
         fprintf(stderr, "TAC_RET"); break;
+    case TAC_CALL:
+        fprintf(stderr, "TAC_CALL"); break;
+    case TAC_ARG:
+        fprintf(stderr, "TAC_ARG"); break;
     
     case TAC_MOVE:
         fprintf(stderr, "TAC_MOVE"); break;
-    case TAC_MOVE_VEC:
-        fprintf(stderr, "TAC_MOVE_VEC"); break;
     
     default: fprintf(stderr, "TAC_UNKNOWN"); break;
     }
@@ -264,16 +266,16 @@ TAC* generate_code(AST* node){
     
 
     case AST_ATTR:
-        result = tac_join(code[0], tac_create(TAC_MOVE,node->symbol, code[0]?code[0]->res:0, 0));
+        result = tac_join(code[0], tac_create(TAC_MOVE, node->symbol, code[0]?code[0]->res:0, 0));
         break;
     
     case AST_VAR_DEC:
-        result = tac_join(code[0], tac_create(TAC_MOVE,node->symbol, code[1]?code[1]->res:0, 0));
+        result = tac_join(code[0], tac_create(TAC_MOVE, node->symbol, code[1]?code[1]->res:0, 0));
         break;
     
     case AST_VEC_ATTR: 
         result = tac_join(code[0], 
-                    tac_create(TAC_MOVE_VEC,node->symbol, code[0]?code[0]->res:0, code[1]?code[1]->res:0));
+                    tac_create(TAC_MOVE, node->symbol, code[1]?code[1]->res:0, code[0]?code[0]->res:0));
         break;
 
     case AST_IF:
@@ -305,6 +307,14 @@ TAC* generate_code(AST* node){
     
     case AST_RETURN:
         result = tac_join(code[0], tac_create(TAC_RET, 0, code[0]?code[0]->res:0, 0));
+        break;
+
+    case AST_FOO_CALL:
+        result = tac_join(tac_create(TAC_CALL,node->symbol,0,0), code[0]);
+        break;
+
+    case AST_FOO_CALL_ARG:
+        result = tac_join(tac_join(code[0], tac_create(TAC_ARG, 0, code[0]?code[0]->res:0, 0)), code[1]);
         break;
 
     default: 

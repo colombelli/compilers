@@ -8,7 +8,7 @@ mat = int [ 10];
 bov = bool [1];
 
 
-main () = int
+main (v=int, as=bool, dsgk=int) = int
   {
       a = a + (i + 100) / 9898 * f - f
       i = 'a' + 1 + c 
@@ -48,5 +48,9 @@ trueb (x = int) = bool {
     read a
     read b
     mat[1+5*9] = 10
+
+    i = one()
+    i = main(1+4*8, TRUE|FALSE, 2+i)
+
     return a+2*10 > 1
 };
