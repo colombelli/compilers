@@ -22,18 +22,17 @@
 #define TAC_OR 13
 
 #define TAC_NOT 14
-
-#define TAC_IFZ 15      //jump if false
-#define TAC_LABEL 16
-#define TAC_BEGINFUN 17
-#define TAC_ENDFUN 18
-#define TAC_IFZ 19
-#define TAC_JUMP 20
-#define TAC_CALL 21
-#define TAC_ARG 22
-#define TAC_RET 23      //return
-#define TAC_PRINT 24
-#define TAC_READ 25
+    
+#define TAC_LABEL 15
+#define TAC_BEGINFUN 16
+#define TAC_ENDFUN 17
+#define TAC_IFZ 18      //jump if false
+#define TAC_JUMP 19
+#define TAC_CALL 20
+#define TAC_ARG 21
+#define TAC_RET 22      //return
+#define TAC_PRINT 23
+#define TAC_READ 24
 
 #define TAC_MOVE 42
 #define TAC_MOVE_VEC 43
@@ -55,7 +54,7 @@ TAC* tac_join(TAC* l1, TAC* l2);
 
 TAC* create_tac_bin_op(int tac_type, TAC* son1, TAC* son2);
 TAC* create_tac_if(TAC* son1, TAC* son2);
-
+TAC* create_tac_if_else(TAC* son1, TAC* son2, TAC* son3);
 
 
 // CODE GENERATION

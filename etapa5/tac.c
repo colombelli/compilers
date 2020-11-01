@@ -21,7 +21,7 @@ void tac_print(TAC* tac){
         return;
 
     if (tac->type == TAC_SYMBOL) return;
-    fprintf(stderr, "TAC(");
+    //fprintf(stderr, "TAC(");
 
     switch (tac->type){
     case TAC_SYMBOL:
@@ -56,9 +56,13 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_IFZ"); break;
     case TAC_LABEL:
         fprintf(stderr, "TAC_LABEL"); break;
+    case TAC_JUMP:
+        fprintf(stderr, "TAC_JUMP"); break;
     
     case TAC_MOVE:
         fprintf(stderr, "TAC_MOVE"); break;
+    case TAC_MOVE_VEC:
+        fprintf(stderr, "TAC_MOVE_VEC"); break;
     
     default: fprintf(stderr, "TAC_UNKNOWN"); break;
     }
@@ -67,7 +71,7 @@ void tac_print(TAC* tac){
     fprintf(stderr,", %s", (tac->op1) ? tac->op1->text : "0");
     fprintf(stderr,", %s", (tac->op2) ? tac->op2->text : "0");
 
-    fprintf(stderr, ");\n");
+    fprintf(stderr, "\n");
 
 }
 
@@ -125,7 +129,36 @@ TAC* create_tac_if(TAC* son1, TAC* son2){
 }
 
 
-TAC* create_tac_if_else(){}
+TAC* create_tac_if_else(TAC* son1, TAC* son2, TAC* son3){
+
+    TAC* jumpz_tac = 0;
+    TAC* jump_tac = 0;
+
+    TAC* label_else_tac = 0;
+    TAC* label_after_else_tac = 0;
+    
+    HASH_NODE* label_else = 0;
+    HASH_NODE* label_after_else = 0;
+
+    label_else = make_label();
+    label_after_else = make_label();
+
+    jumpz_tac = tac_create(TAC_IFZ, label_else, son1?son1->res:0, 0);
+    jumpz_tac->prev = son1;
+
+    jump_tac = tac_create(TAC_JUMP, label_after_else, son2?son2->res:0, 0);
+    jump_tac->prev = son2;
+
+    label_else_tac = tac_create(TAC_LABEL,label_else,0,0);
+    label_else_tac->prev = jump_tac;
+
+    label_after_else_tac = tac_create(TAC_LABEL,label_after_else,0,0);
+    label_after_else_tac->prev = son3;
+
+    
+    tac_join(jumpz_tac, jump_tac);
+    return tac_join(label_else_tac,  label_after_else_tac);
+}
 
 
 TAC* generate_code(AST* node){
@@ -164,9 +197,18 @@ TAC* generate_code(AST* node){
     case AST_ATTR:
         result = tac_join(code[0], tac_create(TAC_MOVE,node->symbol, code[0]?code[0]->res:0, 0));
         break;
+    
+    case AST_VEC_ATTR: 
+        result = tac_join(code[0], 
+                    tac_create(TAC_MOVE_VEC,node->symbol, code[0]?code[0]->res:0, code[1]?code[1]->res:0));
+        break;
 
     case AST_IF:
         result = create_tac_if(code[0], code[1]);
+        break;
+
+    case AST_IF_ELSE:
+        result = create_tac_if_else(code[0], code[1], code[2]);
         break;
     
     default: 
