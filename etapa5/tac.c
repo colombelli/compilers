@@ -275,16 +275,6 @@ TAC* generate_code(AST* node){
     // PROCESS THIS NODE
     switch (node->type){
     
-        /*
-    case AST_DEC:
-        if (flag_foo_def){
-            flag_foo_def = 0;
-            result = tac_join(tac_create(TAC_ENDFUN, 0, 0, 0), code[0]);
-        } else
-            result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));
-        break;*/
-
-
     case AST_SYMBOL:
         result = tac_create(TAC_SYMBOL,node->symbol,0,0); 
         break;
@@ -358,13 +348,13 @@ TAC* generate_code(AST* node){
         result = tac_join(code[0], tac_create(TAC_RET, 0, code[0]?code[0]->res:0, 0));
         break;
 
-    /*case AST_FOO_CALL:
-        result = tac_join(tac_create(TAC_CALL,node->symbol,0,0), code[0]);
+    case AST_FOO_CALL:
+        result = tac_join(code[0], tac_create(TAC_CALL,make_temp(),node->symbol,0));
         break;
 
     case AST_FOO_CALL_ARG:
         result = tac_join(tac_join(code[0], tac_create(TAC_ARG, 0, code[0]?code[0]->res:0, 0)), code[1]);
-        break;*/ 
+        break;
 
     case AST_FOO_DEC:
         result = tac_join(tac_join(tac_create(TAC_BEGINFUN,node->son[0]->symbol,0,0), code[1]),
