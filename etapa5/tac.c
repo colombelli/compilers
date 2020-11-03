@@ -2,10 +2,6 @@
 #include <string.h>
 
 
-// used to know if, after seeing a declaration, 
-// there should be a TAC_ENDFUN
-int flag_foo_def = 1;
-
 // used to know how many init values were
 // given for the vector declaration
 int vec_init_i = 0;
@@ -79,6 +75,10 @@ void tac_print(TAC* tac){
         fprintf(stderr, "TAC_CALL"); break;
     case TAC_ARG:
         fprintf(stderr, "TAC_ARG"); break;
+    case TAC_BEGINFUN:
+        fprintf(stderr, "TAC_BEGINFUN"); break;
+    case TAC_ENDFUN:
+        fprintf(stderr, "TAC_ENDFUN"); break;
     
     case TAC_MOVE:
         fprintf(stderr, "TAC_MOVE"); break;
@@ -275,14 +275,14 @@ TAC* generate_code(AST* node){
     // PROCESS THIS NODE
     switch (node->type){
     
-
+        /*
     case AST_DEC:
         if (flag_foo_def){
             flag_foo_def = 0;
             result = tac_join(tac_create(TAC_ENDFUN, 0, 0, 0), code[0]);
         } else
             result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));
-        break;
+        break;*/
 
 
     case AST_SYMBOL:
@@ -364,11 +364,12 @@ TAC* generate_code(AST* node){
 
     case AST_FOO_CALL_ARG:
         result = tac_join(tac_join(code[0], tac_create(TAC_ARG, 0, code[0]?code[0]->res:0, 0)), code[1]);
-        break; 
+        break;*/ 
 
     case AST_FOO_DEC:
-        result = tac_join();
-        break;*/
+        result = tac_join(tac_join(tac_create(TAC_BEGINFUN,node->son[0]->symbol,0,0), code[1]),
+                                    tac_create(TAC_ENDFUN,node->son[0]->symbol,0,0));
+        break;
     
 
     default: 
