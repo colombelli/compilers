@@ -1,4 +1,15 @@
 #include "tac.h"
+#include <string.h>
+
+
+// used to know if, after seeing a declaration, 
+// there should be a TAC_ENDFUN
+int flag_foo_def = 1;
+
+// used to know how many init values were
+// given for the vector declaration
+int vec_init_i = 0;
+
 
 TAC* tac_create(int type, HASH_NODE* res, HASH_NODE* op1, HASH_NODE* op2){
 
@@ -231,6 +242,22 @@ TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* so
 }
 
 
+void fix_vec_initial_value_tacs(HASH_NODE* vec_identifier, TAC* current_tac_node){
+
+    if (!current_tac_node)
+        return;
+
+    char buffer[8];
+    TAC* aux_node = current_tac_node;
+    for (aux_node; vec_init_i; aux_node=aux_node->prev){
+        aux_node->res = vec_identifier;
+        sprintf(buffer,"%d",vec_init_i-1);  //converts integer for indexation to string 
+        aux_node->op2 = hashInsert(buffer, SYMBOL_LIT_INT);
+        vec_init_i--;
+    }
+    return;
+}
+
 
 TAC* generate_code(AST* node){
 
@@ -248,6 +275,16 @@ TAC* generate_code(AST* node){
     // PROCESS THIS NODE
     switch (node->type){
     
+
+    case AST_DEC:
+        if (flag_foo_def){
+            flag_foo_def = 0;
+            result = tac_join(tac_create(TAC_ENDFUN, 0, 0, 0), code[0]);
+        } else
+            result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));
+        break;
+
+
     case AST_SYMBOL:
         result = tac_create(TAC_SYMBOL,node->symbol,0,0); 
         break;
@@ -276,6 +313,18 @@ TAC* generate_code(AST* node){
     case AST_VEC_ATTR: 
         result = tac_join(code[0], 
                     tac_create(TAC_MOVE, node->symbol, code[1]?code[1]->res:0, code[0]?code[0]->res:0));
+        break;
+    
+    case AST_VEC_INIT_VAL:
+        // since there's no vector inside a vector declaration, we can count on a global manager variable
+        result = tac_join(tac_create(TAC_MOVE, 0, code[0]?code[0]->res:0, 0), code[1]);
+        // note: when reaching AST_VEC_DEC the TAC_MOVE will receive it's symbol and index
+        vec_init_i++;
+        break;
+
+    case AST_VEC_DEC:
+        fix_vec_initial_value_tacs(node->symbol, code[2]);
+        result = code[2];
         break;
 
     case AST_IF:
@@ -309,13 +358,18 @@ TAC* generate_code(AST* node){
         result = tac_join(code[0], tac_create(TAC_RET, 0, code[0]?code[0]->res:0, 0));
         break;
 
-    case AST_FOO_CALL:
+    /*case AST_FOO_CALL:
         result = tac_join(tac_create(TAC_CALL,node->symbol,0,0), code[0]);
         break;
 
     case AST_FOO_CALL_ARG:
         result = tac_join(tac_join(code[0], tac_create(TAC_ARG, 0, code[0]?code[0]->res:0, 0)), code[1]);
-        break;
+        break; 
+
+    case AST_FOO_DEC:
+        result = tac_join();
+        break;*/
+    
 
     default: 
         result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));
