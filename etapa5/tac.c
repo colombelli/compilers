@@ -275,6 +275,7 @@ TAC* generate_code(AST* node){
     // PROCESS THIS NODE
     switch (node->type){
     
+
     case AST_SYMBOL:
         result = tac_create(TAC_SYMBOL,node->symbol,0,0); 
         break;
