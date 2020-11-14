@@ -1,0 +1,11 @@
+a = int:0;
+b = int:1;
+x = int:2;
+
+fun () = int {
+    a=5
+    b=777
+    x=a+b+99
+    print x
+    return x
+};
