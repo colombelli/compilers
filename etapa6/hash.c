@@ -168,5 +168,8 @@ void print_asm(FILE *fout){
 
         }
     }
+    fprintf(fout, "_TRUE: .long\t1\n");
+    fprintf(fout, "_FALSE: .long\t0\n");
+
     fprintf(fout,   ".section .rodata\n");
 }

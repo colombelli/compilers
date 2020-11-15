@@ -138,6 +138,15 @@ void asm_double_op_logical(TAC* tac, char* instruction){
                     instruction, tac->res->text);
 }
 
+void asm_not(TAC* tac){
+    fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
+                    "\ttestl\t%%eax, %%eax\n"
+                    "\tsete\t%%al\n"
+                    "\tmovzb\t%%al, %%eax\n"
+                    "\tmovl\t%%eax, _%s(%%rip)\n",
+                    tac->op1->text, tac->res->text);
+}
+
 
 void generate_asm(TAC* first){
 
@@ -169,6 +178,7 @@ void generate_asm(TAC* first){
             case TAC_DIF: asm_double_op_logical(tac, "setne"); break;
             case TAC_GRE: asm_double_op_logical(tac, "setg"); break;
             case TAC_LES: asm_double_op_logical(tac, "setl"); break;
+            case TAC_NOT: asm_not(tac); break;
             //case TAC_AND: asm_double_op_logical(tac, ""); break;
             //case TAC_OR: asm_double_op_logical(tac, ""); break;
         }

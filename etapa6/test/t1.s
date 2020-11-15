@@ -42,89 +42,10 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-
-	movl	a(%rip), %edx
-	movl	c(%rip), %eax
-	cmpl	%eax, %edx
+	movl	a(%rip), %eax
+	testl	%eax, %eax
 	sete	%al
 	movzbl	%al, %eax
-	movl	%eax, b(%rip)
-
-
-
-	movl	a(%rip), %edx
-	movl	c(%rip), %eax
-	cmpl	%eax, %edx
-	setg	%al
-	movzbl	%al, %eax
-	movl	%eax, b(%rip)
-
-
-
-	movl	a(%rip), %edx
-	movl	c(%rip), %eax
-	cmpl	%eax, %edx
-	setl	%al
-	movzbl	%al, %eax
-	movl	%eax, b(%rip)
-
-
-
-	movl	a(%rip), %edx
-	movl	c(%rip), %eax
-	cmpl	%eax, %edx
-	setge	%al
-	movzbl	%al, %eax
-	movl	%eax, b(%rip)
-
-
-
-	movl	a(%rip), %edx
-	movl	c(%rip), %eax
-	cmpl	%eax, %edx
-	setle	%al
-	movzbl	%al, %eax
-	movl	%eax, b(%rip)
-
-
-
-	movl	a(%rip), %edx
-	movl	c(%rip), %eax
-	cmpl	%eax, %edx
-	setne	%al
-	movzbl	%al, %eax
-	movl	%eax, b(%rip)
-
-
-	movl	a(%rip), %eax
-	testl	%eax, %eax
-	je	.L2
-	movl	c(%rip), %eax
-	testl	%eax, %eax
-	je	.L2
-	movl	$1, %eax
-	jmp	.L3
-.L2:
-	movl	$0, %eax
-.L3:
-	movl	%eax, b(%rip)
-	movl	$1, a(%rip)
-	movl	a(%rip), %eax
-	testl	%eax, %eax
-	jne	.L4
-	movl	c(%rip), %eax
-	testl	%eax, %eax
-	je	.L5
-.L4:
-	movl	$1, %eax
-	jmp	.L6
-.L5:
-	movl	$0, %eax
-.L6:
-	movl	%eax, b(%rip)
-	movl	$1, a(%rip)
-	movl	a(%rip), %eax
-	notl	%eax
 	movl	%eax, b(%rip)
 	movl	$0, %eax
 	popq	%rbp

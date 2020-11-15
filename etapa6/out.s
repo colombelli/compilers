@@ -43,15 +43,9 @@ _main:
 	movl	%eax, _mYWeeirT_emp2(%rip)
 	movl	_mYWeeirT_emp2(%rip), %eax
 	movl	%eax, _x(%rip)
-	movl	_3(%rip), %edx
-	movl	_4(%rip), %eax
-	cmpl	%eax, %edx
-	setl	%al
-	movzbl	%al, %eax
-	movl	%eax, _mYWeeirT_emp3(%rip)
 
 ## TAC_IFZ
-	movl	_mYWeeirT_emp3(%rip), %eax
+	movl	_bob(%rip), %eax
 	testl	%eax, %eax
 	je		.mYLabule_0
 ## TAC_PRINT
@@ -79,7 +73,6 @@ _main:
 .data
 _1: .long	1
 _2: .long	2
-_3: .long	3
 _4: .long	4
 _a: .long	0
 _b: .long	0
@@ -88,7 +81,8 @@ _mYWeeirT_emp0: .long	0
 _mYWeeirT_emp1: .long	0
 _mYWeeirT_emp2: .long	0
 _bob: .long	0
-_mYWeeirT_emp3: .long	0
 _10: .long	10
 _80: .long	80
+_TRUE: .long	1
+_FALSE: .long	0
 .section .rodata

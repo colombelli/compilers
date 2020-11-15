@@ -6,7 +6,7 @@ bob = bool:TRUE;
 main () = int {
     x=((10+4)*2)/1
 
-    if (3<4) then {
+    if (bob) then {
         print x
     }
     else
