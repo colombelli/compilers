@@ -126,6 +126,19 @@ void asm_div(TAC* tac){
                     tac->res->text);
 }
 
+
+void asm_double_op_logical(TAC* tac, char* instruction){
+    fprintf(fout,   "\tmovl\t_%s(%%rip), %%edx\n"
+                    "\tmovl\t_%s(%%rip), %%eax\n"
+                    "\tcmpl\t%%eax, %%edx\n"
+                    "\t%s\t%%al\n"
+                    "\tmovzbl\t%%al, %%eax\n"
+                    "\tmovl\t%%eax, _%s(%%rip)\n",
+                    tac->op1->text, tac->op2->text,
+                    instruction, tac->res->text);
+}
+
+
 void generate_asm(TAC* first){
 
     fout = fopen("out.s", "w");
@@ -150,6 +163,14 @@ void generate_asm(TAC* first){
             case TAC_SUB: asm_sub(tac); break;
             case TAC_MUL: asm_mult(tac); break;
             case TAC_DIV: asm_div(tac); break;
+            case TAC_EQ: asm_double_op_logical(tac, "sete"); break;
+            case TAC_GE: asm_double_op_logical(tac, "setge"); break;
+            case TAC_LE: asm_double_op_logical(tac, "setle"); break;
+            case TAC_DIF: asm_double_op_logical(tac, "setne"); break;
+            case TAC_GRE: asm_double_op_logical(tac, "setg"); break;
+            case TAC_LES: asm_double_op_logical(tac, "setl"); break;
+            //case TAC_AND: asm_double_op_logical(tac, ""); break;
+            //case TAC_OR: asm_double_op_logical(tac, ""); break;
         }
     }
 

@@ -7,14 +7,12 @@ int e = 235;
 
 
 int main(){
-if (b) {
-    a=b+c;
-    a=b-c;
-    a=b*c;
-    a=b/c;
-} else {
-    e=d;
-}
-a=e;
+b = a && c;
+a=1;
+
+b = a || c;
+a=1;
+
+b = ~a;
 }
 

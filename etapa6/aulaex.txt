@@ -4,10 +4,9 @@ x = int:2;
 bob = bool:TRUE;
 
 main () = int {
-    b=777
     x=((10+4)*2)/1
 
-    if (bob) then {
+    if (3<4) then {
         print x
     }
     else
