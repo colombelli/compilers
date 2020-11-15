@@ -86,6 +86,45 @@ void asm_ifz(TAC* tac){
                     tac->op1->text, tac->res->text);
 }
 
+void asm_double_op_edx_eax(TAC* tac, char* instruction){
+    fprintf(fout,   "\tmovl\t_%s(%%rip), %%edx\n"
+                    "\tmovl\t_%s(%%rip), %%eax\n"
+	                "\t%s\t%%edx, %%eax\n"
+                    "\tmovl\t%%eax, _%s(%%rip)\n", 
+                    tac->op1->text, tac->op2->text,
+                    instruction, tac->res->text);
+}
+
+void asm_double_op_eax_edx(TAC* tac, char* instruction){
+    fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
+                    "\tmovl\t_%s(%%rip), %%edx\n"
+	                "\t%s\t%%edx, %%eax\n"
+                    "\tmovl\t%%eax, _%s(%%rip)\n", 
+                    tac->op1->text, tac->op2->text,
+                    instruction, tac->res->text);
+}
+
+void asm_add(TAC* tac){
+    asm_double_op_edx_eax(tac, "addl");
+}
+
+void asm_sub(TAC* tac){
+    asm_double_op_eax_edx(tac, "subl");
+}
+
+void asm_mult(TAC* tac){
+    asm_double_op_edx_eax(tac, "imull");
+}
+
+void asm_div(TAC* tac){
+    fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
+	                "\tmovl\t_%s(%%rip), %%ecx\n"
+	                "\tcltd\n"
+	                "\tidivl\t%%ecx\n"
+	                "\tmovl\t%%eax, _%s(%%rip)\n", 
+                    tac->op1->text, tac->op2->text,
+                    tac->res->text);
+}
 
 void generate_asm(TAC* first){
 
@@ -107,6 +146,10 @@ void generate_asm(TAC* first){
             case TAC_LABEL: asm_label(tac); break;
             case TAC_JUMP: asm_jump(tac); break;
             case TAC_IFZ: asm_ifz(tac); break;
+            case TAC_ADD: asm_add(tac); break;
+            case TAC_SUB: asm_sub(tac); break;
+            case TAC_MUL: asm_mult(tac); break;
+            case TAC_DIV: asm_div(tac); break;
         }
     }
 

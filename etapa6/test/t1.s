@@ -14,14 +14,12 @@ a:
 b:
 	.long	12
 	.globl	c
-	.bss
 	.align 4
 	.type	c, @object
 	.size	c, 4
 c:
-	.zero	4
+	.long	6
 	.globl	d
-	.data
 	.align 4
 	.type	d, @object
 	.size	d, 4
@@ -47,7 +45,22 @@ main:
 	movl	b(%rip), %eax
 	testl	%eax, %eax
 	je	.L2
+	movl	b(%rip), %edx
+	movl	c(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, a(%rip)
 	movl	b(%rip), %eax
+	movl	c(%rip), %edx
+	subl	%edx, %eax
+	movl	%eax, a(%rip)
+	movl	b(%rip), %edx
+	movl	c(%rip), %eax
+	imull	%edx, %eax
+	movl	%eax, a(%rip)
+	movl	b(%rip), %eax
+	movl	c(%rip), %ecx
+	cltd
+	idivl	%ecx
 	movl	%eax, a(%rip)
 	jmp	.L3
 .L2:
