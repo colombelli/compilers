@@ -7,7 +7,7 @@ int e = 235;
 
 
 int main(){
-if (c) {
+if (b) {
     a=b;
 } else {
     e=d;

@@ -44,7 +44,7 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	movl	c(%rip), %eax
+	movl	b(%rip), %eax
 	testl	%eax, %eax
 	je	.L2
 	movl	b(%rip), %eax

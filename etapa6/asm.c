@@ -34,8 +34,18 @@ void asm_move(TAC* tac){
     //TODO: differentiate between types of literals for the appropriate instructions
     //TODO: test if it's a vector initilization and deal with it
 
-    fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
+    if (!strcmp(tac->op1->text, "TRUE")){
+        fprintf(fout,   "\tmovl\t$1, %%eax\n"
+                    "\tmovl\t%%eax, _%s(%%rip)\n", tac->res->text);
+    }
+    else if (!strcmp(tac->op1->text, "FALSE")){
+        fprintf(fout,   "\tmovl\t$0, %%eax\n"
+                    "\tmovl\t%%eax, _%s(%%rip)\n", tac->res->text);
+    }
+    else {
+        fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
                     "\tmovl\t%%eax, _%s(%%rip)\n", tac->op1->text, tac->res->text);
+    }
 }
 
 
@@ -65,14 +75,14 @@ void asm_label(TAC* tac){
 }
 
 void asm_jump(TAC* tac){
-    fprintf(fout, "\tjmp\t\t%s\n", tac->res->text);
+    fprintf(fout, "\tjmp\t\t.%s\n", tac->res->text);
 }
 
 void asm_ifz(TAC* tac){
     fprintf(fout,   "\n## TAC_IFZ\n"
                     "\tmovl	_%s(%%rip), %%eax\n"
 	                "\ttestl	%%eax, %%eax\n"
-	                "\tje\t\t%s\n", 
+	                "\tje\t\t.%s\n", 
                     tac->op1->text, tac->res->text);
 }
 

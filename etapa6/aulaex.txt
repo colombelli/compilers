@@ -1,7 +1,7 @@
 a = int:80;
 b = int:1;
 x = int:2;
-bob = bool:TRUE;
+bob = bool:FALSE;
 
 main () = int {
     b=777

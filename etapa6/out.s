@@ -14,7 +14,7 @@ main:
 	movl	%eax, _b(%rip)
 	movl	_2(%rip), %eax
 	movl	%eax, _x(%rip)
-	movl	_TRUE(%rip), %eax
+	movl	$0, %eax
 	movl	%eax, _bob(%rip)
 	call	_main
 ## TAC_ENDFUN
@@ -36,14 +36,14 @@ _main:
 ## TAC_IFZ
 	movl	_bob(%rip), %eax
 	testl	%eax, %eax
-	je		mYLabule_0
+	je		.mYLabule_0
 ## TAC_PRINT
 	movl	_a(%rip), %esi
 	leaq	.printintstr(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
 	movl	$0, %eax
-	jmp		mYLabule_1
+	jmp		.mYLabule_1
 
 .mYLabule_0:
 ## TAC_PRINT
