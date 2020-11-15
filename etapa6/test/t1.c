@@ -1,15 +1,17 @@
 #include <stdio.h>
 int a=2132;
 int b=12;
-int c=123;
-int d=456;
+int c=0;
+int d = 13;
+int e = 235;
 
-
-int nima(){
-a = b;
-printf("%d", a);  
-}
 
 int main(){
-nima();
+if (c) {
+    a=b;
+} else {
+    e=d;
 }
+a=e;
+}
+

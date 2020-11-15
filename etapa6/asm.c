@@ -30,8 +30,6 @@ void asm_print(TAC* tac){
 }
 
 
-
-
 void asm_move(TAC* tac){
     //TODO: differentiate between types of literals for the appropriate instructions
     //TODO: test if it's a vector initilization and deal with it
@@ -39,6 +37,7 @@ void asm_move(TAC* tac){
     fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
                     "\tmovl\t%%eax, _%s(%%rip)\n", tac->op1->text, tac->res->text);
 }
+
 
 TAC* asm_decl_ini(TAC* first){
     TAC* tac=first;
@@ -61,6 +60,22 @@ TAC* asm_decl_ini(TAC* first){
     return tac;
 }
 
+void asm_label(TAC* tac){
+    fprintf(fout, "\n.%s:\n", tac->res->text);
+}
+
+void asm_jump(TAC* tac){
+    fprintf(fout, "\tjmp\t\t%s\n", tac->res->text);
+}
+
+void asm_ifz(TAC* tac){
+    fprintf(fout,   "\n## TAC_IFZ\n"
+                    "\tmovl	_%s(%%rip), %%eax\n"
+	                "\ttestl	%%eax, %%eax\n"
+	                "\tje\t\t%s\n", 
+                    tac->op1->text, tac->res->text);
+}
+
 
 void generate_asm(TAC* first){
 
@@ -79,6 +94,9 @@ void generate_asm(TAC* first){
             case TAC_ENDFUN: asm_endfun(); break;
             case TAC_PRINT: asm_print(tac); break;
             case TAC_MOVE: asm_move(tac); break;
+            case TAC_LABEL: asm_label(tac); break;
+            case TAC_JUMP: asm_jump(tac); break;
+            case TAC_IFZ: asm_ifz(tac); break;
         }
     }
 
