@@ -1,5 +1,7 @@
 .printintstr: .string "%d"
+.printfloatstr: .string "%f"
 .printstring: .string "%s"
+
 
 ## TAC_BEIGNFUN
 .globl	main
@@ -8,7 +10,7 @@ main:
 	movq	%rsp, %rbp
 
 ## TAC_PRINT
-	movl	$5, %esi
+	movl	b(%rip), %esi
 	leaq	.printintstr(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
@@ -17,3 +19,8 @@ main:
 ## TAC_ENDFUN
 	popq	%rbp
 	ret
+
+
+## DATA SECTION
+a: .long	2132
+b: .float	2132.5

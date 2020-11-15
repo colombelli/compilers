@@ -1,11 +1,10 @@
-a = int:0;
+a = int:80;
 b = int:1;
 x = int:2;
 
-fun () = int {
-    a=5
+main () = int {
     b=777
     x=a+b+99
-    print x
+    print a
     return x
 };

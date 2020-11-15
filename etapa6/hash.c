@@ -129,3 +129,44 @@ HASH_NODE* make_label(){
     sprintf(buffer, "mYLabule_%d", serial++);
     hashInsert(buffer, SYMBOL_LABEL);
 }
+
+
+void print_asm(FILE *fout){
+
+    fprintf(fout,   "\n## DATA SECTION\n"
+                    ".data\n");
+
+    HASH_NODE *node;
+    for(int i=0; i<HASH_SIZE; i++){
+        for(node=Hashtable[i]; node; node=node->next){
+            
+            switch (node->type)
+            {
+            case SYMBOL_VARIABLE:
+                fprintf(fout, "_%s: .long\t0\n", node->text);
+                break;
+
+            case SYMBOL_LIT_INT:
+                fprintf(fout, "_%s: .long\t%s\n", node->text, node->text);
+                break;
+            
+            case SYMBOL_LIT_FLOAT:  //TODO: convert to assembly float
+                fprintf(fout, "_%s: .long\t%s\n", node->text, node->text);
+                break;
+            
+            case SYMBOL_LIT_CHAR:   //TODO: convert to assembly char
+                fprintf(fout, "_%s: \t'%s'\n", node->text, node->text);
+                break;
+            
+            case SYMBOL_LIT_STRING:
+                fprintf(fout, "_%s: .long\t%s\n", node->text, node->text);
+                break;
+
+            default:
+                break;
+            }
+
+        }
+    }
+    fprintf(fout,   ".section .rodata\n");
+}

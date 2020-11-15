@@ -59,5 +59,7 @@ void insert_symbol_arg(HASH_NODE* foo_symbol, HASH_NODE* new_parameter);
 HASH_NODE* make_temp(void);
 HASH_NODE* make_label(void);
 
+void print_asm(FILE *fout);
+
 #endif
 // END

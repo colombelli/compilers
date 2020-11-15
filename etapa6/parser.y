@@ -3,6 +3,7 @@
     #include "ast.h"
     #include "semantic.h"
     #include "tac.h"
+    #include "asm.h"
 
     int yyerror();
     int getLineNumber();
@@ -82,6 +83,7 @@
 programa: dec_lst   { 
                         $$ = $1;  finalAST = $$; 
                         
+                        TAC* code;
                         // semantic checks
                         check_and_set_declarations($1);
                         set_expr_ast_datatype($1);
@@ -97,7 +99,13 @@ programa: dec_lst   {
                         }
 
                         // tac generation
-                        tac_print_backwards(generate_code($1));
+                        code = generate_code($1);
+                        tac_print_backwards(code);
+                        
+                        code = tac_reverse(code);
+                        generate_asm(code);
+
+
                     }
     ;
 

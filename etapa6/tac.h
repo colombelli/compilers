@@ -58,8 +58,9 @@ TAC* create_tac_while(TAC* son1, TAC* son2);
 TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* son4);
 
 
-// CODE GENERATION
+// CODE GENERATION (in tac terms)
 TAC* generate_code(AST* node);
 
+TAC* tac_reverse(TAC* tac);
 
 #endif
