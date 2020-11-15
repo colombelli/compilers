@@ -1,13 +1,14 @@
 a = int:80;
 b = int:1;
 x = int:2;
+xx = int[5]:0 1 2 3 4;
 bob = bool:TRUE;
 
 main () = int {
     x=((10+4)*2)/1
 
     if (bob) then {
-        print x
+        print xx[2]+10
     }
     else
         print b

@@ -25,12 +25,13 @@ c:
 	.size	d, 4
 d:
 	.long	13
-	.globl	e
-	.align 4
-	.type	e, @object
-	.size	e, 4
-e:
-	.long	235
+	.globl	myvec
+	.bss
+	.align 16
+	.type	myvec, @object
+	.size	myvec, 20
+myvec:
+	.zero	20
 	.text
 	.globl	main
 	.type	main, @function
@@ -42,11 +43,14 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	movl	a(%rip), %eax
-	testl	%eax, %eax
-	sete	%al
-	movzbl	%al, %eax
-	movl	%eax, b(%rip)
+	movl	$3, a(%rip)
+	movl	a(%rip), %edx
+	movl	c(%rip), %eax
+	movslq	%edx, %rdx
+	leaq	0(,%rdx,4), %rcx
+	leaq	myvec(%rip), %rdx
+	movl	%eax, (%rcx,%rdx)
+	movl	$45, a(%rip)
 	movl	$0, %eax
 	popq	%rbp
 	.cfi_def_cfa 7, 8

@@ -145,6 +145,10 @@ void print_asm(FILE *fout){
             case SYMBOL_VARIABLE:
                 fprintf(fout, "_%s: .long\t0\n", node->text);
                 break;
+            
+            case SYMBOL_VECTOR:
+                fprintf(fout, "_%s: .zero\t4000\n", node->text);
+                break;
 
             case SYMBOL_LIT_INT:
                 fprintf(fout, "_%s: .long\t%s\n", node->text, node->text);
@@ -159,7 +163,7 @@ void print_asm(FILE *fout){
                 break;
             
             case SYMBOL_LIT_STRING:
-                fprintf(fout, "_%s: .long\t%s\n", node->text, node->text);
+                fprintf(fout, "_%s: .string\t%s\n", node->text, node->text);
                 break;
 
             default:

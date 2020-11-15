@@ -32,7 +32,6 @@ void asm_print(TAC* tac){
 
 void asm_move(TAC* tac){
     //TODO: differentiate between types of literals for the appropriate instructions
-    //TODO: test if it's a vector initilization and deal with it
 
     if (!strcmp(tac->op1->text, "TRUE")){
         fprintf(fout,   "\tmovl\t$1, %%eax\n"
@@ -42,10 +41,22 @@ void asm_move(TAC* tac){
         fprintf(fout,   "\tmovl\t$0, %%eax\n"
                     "\tmovl\t%%eax, _%s(%%rip)\n", tac->res->text);
     }
+    else if (tac->op2){ //then it's a vector
+        fprintf(fout,   "\tmovl\t_%s(%%rip), %%edx\n"
+                        "\tmovl\t_%s(%%rip), %%eax\n"
+                        "\tmovslq\t%%edx, %%rdx\n"
+                        "\tleaq\t0(,%%rdx,4), %%rcx\n"
+                        "\tleaq\t_%s(%%rip), %%rdx\n"
+                        "\tmovl\t%%eax, (%%rcx,%%rdx)\n", 
+                        tac->op2->text,
+                        tac->op1->text,
+                        tac->res->text);
+    }
     else {
         fprintf(fout,   "\tmovl\t_%s(%%rip), %%eax\n"
                     "\tmovl\t%%eax, _%s(%%rip)\n", tac->op1->text, tac->res->text);
     }
+
 }
 
 
