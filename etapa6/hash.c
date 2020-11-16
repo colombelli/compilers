@@ -147,7 +147,7 @@ void print_asm(FILE *fout){
                 break;
             
             case SYMBOL_VECTOR:
-                fprintf(fout, "_%s: .zero\t4000\n", node->text);
+                fprintf(fout, "_%s: .zero\t400\n", node->text);
                 break;
 
             case SYMBOL_LIT_INT:
