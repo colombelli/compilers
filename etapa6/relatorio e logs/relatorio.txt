@@ -1,0 +1,26 @@
+Comandos implementados:
+-> Declarações (com inicialização - exige uma função main definida pelo user)
+-> Atribuições
+-> Início e final de função
+-> Print de expressões/variáveis/vetores
+-> Criação de labels
+-> Jumps obrigatórios
+-> Jump if zero (TAC_IFZ)
+-> Adição, subtração, divisão, multiplicação
+-> Testes lógicos: ==, =!, >, <, >=, <=
+-> Not lógico
+
+Com essas coisas implementadas ficaram funcionais os comandos:
+-> if / if-else
+-> while
+-> loop
+
+Como o professor permitiu focarmos em inteiros nesta etapa, 
+a montagem dos assembly (.s) foram feitas considerando apenas
+literais inteiros (ou booleanos).
+
+
+Ficou faltando:
+-> Call de funções / return
+-> Comando read
+-> Flexibilização no tamanho de vetores

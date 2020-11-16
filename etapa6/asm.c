@@ -190,8 +190,6 @@ void generate_asm(TAC* first){
             case TAC_GRE: asm_double_op_logical(tac, "setg"); break;
             case TAC_LES: asm_double_op_logical(tac, "setl"); break;
             case TAC_NOT: asm_not(tac); break;
-            //case TAC_AND: asm_double_op_logical(tac, ""); break;
-            //case TAC_OR: asm_double_op_logical(tac, ""); break;
         }
     }
 
