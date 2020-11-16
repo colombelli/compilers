@@ -1,3 +1,29 @@
+================= PROGRAM =====================
+
+i=int:1;
+a=int:10;
+
+main () = int {
+    
+    loop (i:1,10,2) {
+        print i
+        a = a+10
+    }
+    print a
+    return 0
+};
+
+
+================= OUTPUT ======================
+
+1357960
+
+Ou seja, printou i de 1 a 9 dentro do loop, depois 
+printou o resultado dos +10 em a: 60
+
+
+=================== ASM =======================
+
 .printintstr: .string "%d"
 .printfloatstr: .string "%f"
 .printstring: .string "%s"
@@ -76,11 +102,3 @@ _0: .long	0
 _1: .long	1
 _2: .long	2
 _a: .long	0
-_i: .long	0
-_mYWeeirT_emp0: .long	0
-_mYWeeirT_emp1: .long	0
-_mYWeeirT_emp2: .long	0
-_10: .long	10
-_TRUE: .long	1
-_FALSE: .long	0
-.section .rodata

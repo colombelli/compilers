@@ -1,15 +1,12 @@
-a = int:80;
-b = int:1;
-x = int:2;
-bob = bool:TRUE;
+i=int:1;
+a=int:10;
 
 main () = int {
     
-    if (a>b ^ bob) then {
-        print (x+10)*10-1
+    loop (i:1,10,2) {
+        print i
+        a = a+10
     }
-    else
-        print b
-
-    return x
+    print a
+    return 0
 };
