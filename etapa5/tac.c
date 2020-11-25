@@ -195,10 +195,10 @@ TAC* create_tac_while(TAC* son1, TAC* son2){
 
 
     label_before_tac = tac_create(TAC_LABEL,label_before,0,0);
-    label_before_tac->prev = son1;
+    tac_join(label_before_tac, son1);
 
     jumpz = tac_create(TAC_IFZ, label_after, son1?son1->res:0, 0);
-    jumpz->prev = label_before_tac;
+    jumpz->prev = son1;
 
     jump = tac_create(TAC_JUMP, label_before, 0, 0);
     jump->prev = son2;
@@ -228,15 +228,15 @@ TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* so
     TAC* label_exit = tac_create(TAC_LABEL, label_after, 0, 0);
 
 
-
     init_i->prev = tac_join(son1, tac_join(son2, son3));
     label_loop->prev = init_i;
     les_test->prev = label_loop;
     jumpz->prev = les_test;
-    add_i->prev = jumpz;
+    add_i->prev = son4;
+    tac_join(jumpz, add_i);
     update_i->prev = add_i;
-    jump->prev = son4;
-    label_exit->prev = tac_join(update_i, jump);
+    jump->prev = update_i;
+    label_exit->prev = jump;
 
     return label_exit;
 }
@@ -370,4 +370,14 @@ TAC* generate_code(AST* node){
 
 
     return result;
+}
+
+
+
+TAC* tac_reverse(TAC* tac){
+
+    TAC* t = tac;
+    for (t=tac; t->prev; t=t->prev)
+        t->prev->next = t;
+    return t;
 }
