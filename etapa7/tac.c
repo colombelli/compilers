@@ -1,6 +1,6 @@
 #include "tac.h"
 #include <string.h>
-
+#include <ctype.h>
 
 // used to know how many init values were
 // given for the vector declaration
@@ -20,6 +20,27 @@ TAC* tac_create(int type, HASH_NODE* res, HASH_NODE* op1, HASH_NODE* op2){
 
     return new_tac;
 }
+
+
+TAC* tac_copy(TAC* tac){
+    if (!tac)
+        return 0;
+
+    TAC* new_tac = tac_create(tac->type, tac->res, tac->op1, tac->op2);
+    return new_tac;
+}
+
+
+TAC* copy_son(TAC* son){
+
+    if (!son)
+        return 0;
+
+    TAC* son_cp = tac_copy(son);
+    son_cp->prev = copy_son(son->prev);
+    return son_cp;
+}
+
 
 
 void tac_print(TAC* tac){
@@ -211,8 +232,72 @@ TAC* create_tac_while(TAC* son1, TAC* son2){
 }
 
 
-TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* son4){
 
+int is_string_a_number(char* string){
+    for (int i=0;i<strlen(string); i++)
+        if (!isdigit(string[i])){
+            return 0;
+        }
+    return 1;
+}
+
+int check_if_optimizable(TAC* son1, TAC* son2, TAC* son3){
+
+    if (!son1 || !son2 || !son3)
+        return 0;
+    
+    if (is_string_a_number(son1->res->text) && 
+        is_string_a_number(son2->res->text) && 
+        is_string_a_number(son3->res->text))
+        return 1;
+
+    return 0;
+}
+
+
+TAC* create_tac_loop_unrolled(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* son4){
+
+    int loop_iter = atoi(son1->res->text);
+    int loop_end = atoi(son2->res->text);
+    int pace = atoi(son3->res->text);
+
+    if (loop_iter >= loop_end)      // no iteration is needed -> no code is generated
+        return 0;
+
+    TAC* son4_bkp = copy_son(son4);
+
+    char buffer[50];
+    snprintf(buffer, 50, "%d", loop_iter);
+    HASH_NODE* node_hash = hashInsert(buffer, SYMBOL_LIT_INT);
+    TAC* resulting_tac = tac_join(tac_create(TAC_MOVE, symbol, node_hash, 0), son4);
+
+    loop_iter += pace;
+    while (loop_iter < loop_end) {
+        
+        snprintf(buffer, 50, "%d", loop_iter);
+        node_hash = hashInsert(buffer, SYMBOL_LIT_INT);
+
+        TAC* son4_cp = copy_son(son4_bkp); 
+        TAC* iter_symbol = tac_create(TAC_MOVE, symbol, node_hash, 0);
+        resulting_tac = tac_join(resulting_tac, tac_join(iter_symbol, son4_cp));
+
+        loop_iter += pace;
+    }
+
+    return resulting_tac;
+}
+
+
+
+
+TAC* create_tac_loop(HASH_NODE* symbol, TAC* son1, TAC* son2, TAC* son3, TAC* son4){
+    
+    // LOOP UNROLLING OPTIMIZATION
+    // requirements: every expression must be a number
+    if (check_if_optimizable(son1, son2, son3))
+        return create_tac_loop_unrolled(symbol, son1, son2, son3, son4);
+
+    
     HASH_NODE* label_before = make_label();
     HASH_NODE* label_after = make_label();
     HASH_NODE* temp_test = make_temp();
