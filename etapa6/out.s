@@ -9,9 +9,9 @@ main:
 	movq	%rsp, %rbp
 
 	movl	_1(%rip), %eax
-	movl	%eax, _i(%rip)
-	movl	_10(%rip), %eax
 	movl	%eax, _a(%rip)
+	movl	_0(%rip), %eax
+	movl	%eax, _i(%rip)
 	call	_main
 ## TAC_ENDFUN
 	popq	%rbp
@@ -24,12 +24,12 @@ _main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	movl	_1(%rip), %eax
+	movl	_10(%rip), %eax
 	movl	%eax, _i(%rip)
 
 .mYLabule_0:
 	movl	_i(%rip), %edx
-	movl	_10(%rip), %eax
+	movl	_2(%rip), %eax
 	cmpl	%eax, %edx
 	setl	%al
 	movzbl	%al, %eax
@@ -39,18 +39,18 @@ _main:
 	movl	_mYWeeirT_emp1(%rip), %eax
 	testl	%eax, %eax
 	je		.mYLabule_1
+	movl	_a(%rip), %edx
+	movl	_i(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, _mYWeeirT_emp0(%rip)
+	movl	_mYWeeirT_emp0(%rip), %eax
+	movl	%eax, _a(%rip)
 ## TAC_PRINT
 	movl	_i(%rip), %esi
 	leaq	.printintstr(%rip), %rdi
 	movl	$0, %eax
 	call	printf@PLT
 	movl	$0, %eax
-	movl	_a(%rip), %edx
-	movl	_10(%rip), %eax
-	addl	%edx, %eax
-	movl	%eax, _mYWeeirT_emp0(%rip)
-	movl	_mYWeeirT_emp0(%rip), %eax
-	movl	%eax, _a(%rip)
 	movl	_i(%rip), %edx
 	movl	_2(%rip), %eax
 	addl	%edx, %eax

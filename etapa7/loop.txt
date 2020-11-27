@@ -1,0 +1,14 @@
+a = int: 1;
+i = int: 0;
+
+main () = int
+  {
+
+  loop (i:10,2,2) {
+    a = a + i
+    print i
+  }
+  print a
+
+  return 1
+};
