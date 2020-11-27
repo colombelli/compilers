@@ -1,0 +1,27 @@
+a = yey: 'a';
+c bool: TRUE;
+mat = int [];
+mat = aloha [10];
+v1 int[3]: 77 'a' 0 1.4;
+
+foo2 (aa=) = int {};
+
+foo3 (aa=int) = int {
+    print "this one is right!\n"
+};
+
+foo4 (aa=int) = int { ;
+
+main (e=int, w=bool) = int {
+    i = i + a
+    mat[main(a, c) + 1 + 's'] = a
+    i = a+i+5.10*0.12
+    a 1
+    print "dsgj"
+    return 10
+}
+
+foo1 (aa=int) = wrongType {
+    print "my type is wrong"
+    return 0
+};

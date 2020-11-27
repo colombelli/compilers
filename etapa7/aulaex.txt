@@ -1,0 +1,12 @@
+i=int:1;
+a=int:10;
+
+main () = int {
+    
+    loop (i:1,10,2) {
+        print i
+        a = a+10
+    }
+    print a
+    return 0
+};

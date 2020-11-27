@@ -1,0 +1,23 @@
+a = char: 'a';
+c = bool: TRUE;
+mat = int [10];
+v1 = int[3]: 77 'a' 0 1.4;
+
+
+main (e=int, w=bool) = int {
+    i = i+1
+    if "ue" then {
+        print "oh my expression"
+    } 
+
+    while () {
+        i=i+1
+    }
+
+    loop (+)
+        print "nao sabe a sintaxe nee"
+    
+
+    print "some string", "another string"
+    return 1
+};

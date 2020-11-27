@@ -1,0 +1,14 @@
+a=int:'a';
+c=bool:TRUE;
+mat=int[10];
+v1=bool[3]: 77 'a' 0 1.4 TRUE;
+wg=char:'a';
+i=int:0;
+main(e=int, w=bool)=int
+{
+i=(i+a)
+mat[(((main(a, c))+1)+'s')]=a
+i=((a+i)+(5.10*0.12))
+print "dsgj"
+return 10
+};

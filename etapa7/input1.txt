@@ -1,0 +1,59 @@
+b = bool : FALSE;
+c = char : 'x';
+a = int: 0;
+i = int: 0;
+f = float: 0.0;
+v1 = int[10]: 77 28 10 121 4578 1 2 3 4 'z'; 
+v2 = int[5]: 1 2 3 4 'z'; 
+hh = int: 'a';
+mat = int [ 10]; 
+bov = bool [1];
+
+
+main (v=int, as=bool, dsgk=int) = int
+  {
+      a = a + (i + 100) / 9898 * f - f
+      i = 'a' + 1 + c 
+      b = 2+2+4 > 5
+      b = 1 != 'c'
+      b = 1 < 'c'
+      b = 1 <= 'c'
+      b = 1 >= 'c'
+      b = 1 == 'c'
+      b = 1 != v1[2]
+      b = b | FALSE
+      b = ~(b ^ TRUE) ^ (5 != 4)
+      //b = ~a
+      //b = ~one()
+      b = ~trueb(1)
+      b = trueb(2) | bov[2]
+      a = f +1
+
+      return 10
+  };
+
+one () = int {
+    return 1
+};
+
+trueb (x = int) = bool {
+    
+
+        loop (i:1*10-6,10+a,1-1+2)
+        {
+            i = i+1
+            a = a-1
+        }
+
+    print "yoo", a, 326-328*a, b
+    print "yiii"
+    read a
+    read b
+    mat[1+5*9] = 10
+
+    i = one()
+    i = main(1+4*8, TRUE|FALSE, 2+i)
+
+    return a+2*10 > 1
+};
+
